@@ -4,7 +4,10 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "test": "test"
+    "test": "jest",
+    "dev": "nodemon",
+    "start": "node dist/index.js",
+    "build": "npx tsc"
   },
   "author": "Backend Team 1 Genics 2024",
   "license": "ISC",
