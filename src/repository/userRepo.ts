@@ -1,12 +1,12 @@
-import { prisma } from "../config/database";
-import { CreateUserRequest } from "../dtos/userDto";
+import db from "../config/database";
+import { CreateUserRequest } from "../model/UserModel";
 
-export const userRepo = {
-  async create(user: CreateUserRequest) {
+export class userRepo {
+  static async create(user: CreateUserRequest) {
     return await user;
-  },
+  }
 
-  async findAll() {
+  static async all() {
     return await "display all users";
-  },
-};
+  }
+}

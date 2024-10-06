@@ -1,12 +1,12 @@
 import { userRepo } from "../repository/userRepo";
-import { CreateUserRequest } from "../dtos/userDto";
+import { CreateUserRequest } from "../model/UserModel";
 
-export const userService = {
-  async create(user: CreateUserRequest) {
-    return await userRepo.create(user);
-  },
+export class userService {
+  static async create(data: CreateUserRequest) {
+    return await userRepo.create(data);
+  }
 
-  async findAll() {
-    return await userRepo.findAll();
-  },
-};
+  static async getAllUser() {
+    return await userRepo.all();
+  }
+}

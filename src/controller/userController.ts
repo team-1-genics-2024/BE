@@ -1,34 +1,36 @@
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import { userService } from "../service/userService";
-import { CreateUserRequest } from "../dtos/userDto";
+import { CreateUserRequest } from "../model/UserModel";
+import { successResponse, errorResponse } from "../utils/api-response";
+import { ResponseError } from "../error/ResponseError";
 
 export const userController = {
-  async create(req: Request, res: Response, next: NextFunction) {
+  async create(req: Request, res: Response) {
     try {
       const userReq = req.body as CreateUserRequest;
       const userRes = await userService.create(userReq);
 
-      return res.status(StatusCodes.CREATED).json({
-        status: true,
-        message: "user created successfully",
-        data: userRes,
-      });
+      successResponse(res, StatusCodes.CREATED, "user created successfully", userRes);
     } catch (error) {
-      next(error);
+      if (error instanceof Error) {
+        errorResponse(res, error);
+      } else {
+        errorResponse(res, new ResponseError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error"));
+      }
     }
   },
 
-  async findAll(req: Request, res: Response, next: NextFunction) {
+  async findAll(req: Request, res: Response) {
     try {
-      const userRes = await userService.findAll();
-      return res.status(StatusCodes.OK).json({
-        status: true,
-        message: "all users fetched successfully",
-        data: userRes,
-      });
+      const userRes = await userService.getAllUser();
+      successResponse(res, StatusCodes.OK, "all users fetched successfully", userRes);
     } catch (error) {
-      next(error);
+      if (error instanceof Error) {
+        errorResponse(res, error);
+      } else {
+        errorResponse(res, new ResponseError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error"));
+      }
     }
   },
 };
