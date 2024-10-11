@@ -4,6 +4,7 @@ import { UserService } from "../service/UserService";
 import { CreateUserRequest } from "../model/UserModel";
 import { successResponse, errorResponse } from "../utils/api-response";
 import { ResponseError } from "../error/ResponseError";
+import { AuthRequest } from "../model/AuthModel";
 
 export class UserController {
   static async register(req: Request, res: Response) {

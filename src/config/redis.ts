@@ -1,5 +1,5 @@
 import { createClient } from 'redis';
-import { redisLogger } from './logConfig';  // Menggunakan logger yang sama dengan prisma untuk konsistensi
+import { redisLogger } from './logConfig'; 
 
 declare global {
   var _redisClient: ReturnType<typeof createClient> | undefined;
@@ -17,7 +17,6 @@ if (!global._redisClient) {
   });
 }
 
-// Menambahkan event logging ke Redis mirip seperti Prisma
 const redisClientWithEvents = global._redisClient!;
 
 redisClientWithEvents.on('connect', () => {
@@ -40,7 +39,6 @@ redisClientWithEvents.on('end', () => {
   redisLogger.info('Redis connection closed');
 });
 
-// Fungsi untuk memastikan Redis terhubung
 async function connectRedis() {
   if (!redisClientWithEvents.isOpen) {
     await redisClientWithEvents.connect();
