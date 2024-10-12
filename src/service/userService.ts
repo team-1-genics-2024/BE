@@ -66,20 +66,6 @@ export class UserService {
     };
   }
 
-  static async getAllUsers(): Promise<GetAllUsersResponse> {
-    const users = await UserRepository.all();
-
-    return {
-      users: users.map(user => {
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        }
-      })
-    };
-  }
-
   static async updateUser(auth: AuthRequest, request: UpdateUserRequest): Promise<UpdateUserResponse> {
     const userId: number = auth.user?.id as number;
     const data = Validation.validation(UserValidation.UPDATE, request);

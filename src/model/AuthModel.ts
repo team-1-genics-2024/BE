@@ -11,6 +11,7 @@ export interface LoginRequest {
     password: string;
   };
   user_agent: string;
+  ip_address: string;
 }
 
 export interface LoginResponse {
@@ -21,6 +22,7 @@ export interface LoginResponse {
 export interface RefreshRequest {
   refreshToken: string;
   userAgent: string;
+  ipAddress: string;
 }
 
 export interface RefreshResponse {
@@ -41,3 +43,12 @@ export interface AuthRequest extends Request {
   user: User;
 }
 
+export interface Session {
+  userId: number;
+  refreshToken: string;
+  userAgent: string;
+  ipAddress: string;
+  lastActive: Date;
+  isTimedOut: boolean;
+  expiry: number;
+}

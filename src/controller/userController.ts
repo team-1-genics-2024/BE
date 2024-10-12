@@ -24,8 +24,8 @@ export class UserController {
 
   static async get (req: Request, res: Response) {
     try {
-      const request = req as AuthRequest;
-      const response = await UserService.getUser(request);
+      const getReq = req as AuthRequest;
+      const response = await UserService.getUser(getReq);
       successResponse(res, 200, "Success Getting User", response);
     } catch (err) {
       if (err instanceof Error) {
