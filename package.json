@@ -6,10 +6,12 @@
   "scripts": {
     "test": "jest",
     "dev": "nodemon",
-    "start:dev": "pm2 start src/index.ts --watch",
-    "start:prod": "",
     "build": "npx tsc",
-    "up": "docker compose up -d"
+    "up": "docker compose up -d",
+    "start:dev": "cross-env NODE_ENV=development ts-node dist/index.js",
+    "start:prod": "cross-env NODE_ENV=production ts-node dist/index.js",
+    "deploy:dev": "pm2 startOrRestart ecosystem.config.js --env development --update-env",
+    "deploy:prod": "pm2 startOrRestart ecosystem.config.js --env production --update-env"
   },
   "author": "Backend Team 1 Genics 2024",
   "license": "ISC",
@@ -44,6 +46,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/redis": "^4.0.10",
     "@types/request-ip": "^0.0.41",
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.5",
     "prisma": "^5.19.1",
     "ts-node": "^10.9.2",
