@@ -23,6 +23,6 @@ app.use(requestip.mw())
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 
-app.listen(process.env.PORT || 5000, () => {
+app.listen(process.env.PORT_SERVER || 5000, () => {
   console.log("Server is running on port 5000");
 });
