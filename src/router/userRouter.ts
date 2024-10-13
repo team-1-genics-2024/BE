@@ -1,7 +1,10 @@
-import express from "express";
-import { userController } from "../controller/userController";
+import { Router } from "express";
+import { UserController } from "../controller/UserController";
+import { AuthMiddleware } from "../middleware/AuthMiddleware";
 
-export const userRouter = express.Router();
+export const userRouter = Router();
 
-userRouter.post("/", userController.create);
-userRouter.get("/", userController.findAll);
+userRouter.post("/register", UserController.register);
+userRouter.get("/", AuthMiddleware, UserController.get);
+
+

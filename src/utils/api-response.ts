@@ -2,6 +2,7 @@ import { ZodError } from 'zod';
 import { ResponseError } from '../error/ResponseError';
 import { Response } from 'express'; 
 import { StatusCodes } from 'http-status-codes';
+import { appLogger } from '../config/logConfig';
 
 export const successResponse = (res: Response, code: number, message: string, data?: any): void => {
   if (data === undefined) {
@@ -30,6 +31,7 @@ export const errorResponse = (res: Response, error: Error): void => {
       errorMessage: error.errors[0].message,
     });
   } else {
+    console.log(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errorCode: StatusCodes.INTERNAL_SERVER_ERROR,
       errorMessage: "Internal Server Error",
