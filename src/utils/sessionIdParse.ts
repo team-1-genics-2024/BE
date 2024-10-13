@@ -1,0 +1,1 @@
+export const toSessionKey = (userId: number) => `user:${userId}`;

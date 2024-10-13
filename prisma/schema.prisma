@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
 }
 
 datasource db {
@@ -14,10 +15,28 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(100)
+  password  String?  @db.VarChar(100)
+  name      String   @db.VarChar(100)
+  googleId  String?  @unique @db.VarChar(100)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([email])
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       Int
+  refreshToken String   @unique @db.VarChar(255)
+  user_agent   String   @db.VarChar(255)
+  ip_address   String   @db.VarChar(255)
+  last_active  DateTime @default(now()) @db.Timestamp(6)
+  is_timed_out Boolean  @default(false)
+  expiry       Int
+
+  @@index([refreshToken])
+  @@map("sessions")
 }
