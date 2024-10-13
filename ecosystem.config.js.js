@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'team-1-genics-2024-be',               
-      script: 'ts-node src/index.ts',        
+      script: 'node dist/index.js',        
       instances: '1',          
       env: {
         NODE_ENV: 'development', 
