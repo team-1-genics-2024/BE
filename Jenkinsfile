@@ -75,11 +75,11 @@ pipeline {
         }
 
         success {
-            githubNotify context: 'jenkins', status: 'success', description: 'Build passed!'
+            echo 'Build success!'
         }
 
         failure {
-            githubNotify context: 'jenkins', status: 'failure', description: 'Build failed!'
+            echo 'Build failed!'
         }
     }
 }
