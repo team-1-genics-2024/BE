@@ -56,6 +56,7 @@ pipeline {
                         // Jalankan command di development server
                         sh """
                         ssh -o StrictHostKeyChecking=no yuta@${DEV_IP} '
+                            echo "Connected to server" &&
                             cd /BE &&
                             git pull origin main &&
                             npm install &&
