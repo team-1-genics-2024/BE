@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-              git 'https://github.com/team-1-genics-2024/BE.git'  
+              sh 'git clone https://github.com/team-1-genics-2024/BE'
             }
         }
         stage('Load Env File') {
