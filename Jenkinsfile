@@ -16,6 +16,8 @@ pipeline {
                 withCredentials([file(credentialsId: 'env-file', variable: 'ENV_FILE')]) {
                     // Menyalin secret file dari Jenkins credentials ke dalam workspace sebagai .env
                     sh 'cp $ENV_FILE .env'
+
+                    sh 'pwd && ls -la'
                     
                     // Memuat environment variables dari file .env untuk digunakan dalam build
                     sh 'set -a && . .env && set +a'
