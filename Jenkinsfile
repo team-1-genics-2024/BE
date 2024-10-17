@@ -54,15 +54,15 @@ pipeline {
                     // Gunakan SSH Agent untuk koneksi ke server
                     sshagent(['SERVER_SSH_KEY_ID']) {
                         // Jalankan command di development server
-                        sh """
-                        ssh -o StrictHostKeyChecking=no yuta@${DEV_IP} << 'ENDSSH'
-                            cd /BE 
-                            git pull origin main 
-                            npm install 
-                            npm run build 
+                        sh '''
+                        ssh -o StrictHostKeyChecking=no yuta@$DEV_IP << 'ENDSSH'
+                            cd /BE
+                            git pull origin main
+                            npm install
+                            npm run build
                             npm run deploy:dev
                         ENDSSH
-                        """
+                        '''
                     }
                 }
             }
