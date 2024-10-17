@@ -56,7 +56,7 @@ pipeline {
                         // Jalankan command di development server
                         sh '''
                         ssh -o StrictHostKeyChecking=no yuta@$DEV_IP << 'ENDSSH'
-                            cd /BE
+                            cd BE
                             git pull origin main
                             npm install
                             npm run build
