@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-              sh 'git clone https://github.com/team-1-genics-2024/BE'
+              git 'https://github.com/team-1-genics-2024/BE.git'  
             }
         }
         stage('Load Env File') {
@@ -16,11 +16,6 @@ pipeline {
                 withCredentials([file(credentialsId: 'env-file', variable: 'ENV_FILE')]) {
                     // Menyalin secret file dari Jenkins credentials ke dalam workspace sebagai .env
                     sh 'cp $ENV_FILE .env'
-
-                    sh 'pwd && ls -la'
-                    
-                    // Memuat environment variables dari file .env untuk digunakan dalam build
-                    sh 'set -a && . .env && set +a'
                     
                     // Menampilkan environment variable tertentu (untuk debugging)
                     sh 'echo "Loaded environment: DATABASE_URL=$DATABASE_URL"'
