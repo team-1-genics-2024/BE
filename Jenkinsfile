@@ -69,11 +69,15 @@ pipeline {
         }
 
         success {
+          script {
             githubNotify context: 'CI', status: 'success', description: 'Build success!'
+          }
         }
 
         failure {
-            githubNotify context: 'CI', status: 'failure', description: 'Build failure!'
+          script {
+            githubNotify context: 'CI', status: 'failure', description: 'Build failed!'
+          }
         }
     }
 }
