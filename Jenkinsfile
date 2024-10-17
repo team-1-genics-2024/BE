@@ -55,15 +55,7 @@ pipeline {
                     sshagent(['SERVER_SSH_KEY_ID']) {
                         // Jalankan command di development server
                         sh '''
-                        ssh -o StrictHostKeyChecking=no yuta@$DEV_IP << 'ENDSSH'
-                            source ~/.nvm/nvm.sh || true 
-                            nvm use --lts 
-                            cd BE
-                            git pull origin main
-                            npm install
-                            npm run build
-                            npm run deploy:dev
-                        ENDSSH
+                        ssh -o StrictHostKeyChecking=no yuta@$DEV_IP "bash -c 'source ~/.nvm/nvm.sh && nvm use --lts && cd BE && git pull origin main && npm install && npm run build && npm run deploy:dev'"
                         '''
                     }
                 }
