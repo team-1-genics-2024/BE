@@ -18,7 +18,7 @@ pipeline {
                     sh 'cp $ENV_FILE .env'
                     
                     // Memuat environment variables dari file .env untuk digunakan dalam build
-                    sh 'set -a && source .env && set +a'
+                    sh 'set -a && . .env && set +a'
                     
                     // Menampilkan environment variable tertentu (untuk debugging)
                     sh 'echo "Loaded environment: DATABASE_URL=$DATABASE_URL"'
