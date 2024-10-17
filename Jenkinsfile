@@ -69,11 +69,11 @@ pipeline {
         }
 
         success {
-            echo 'Build success!'
+            githubNotify context: 'CI', status: 'success', description: 'Build success!'
         }
 
         failure {
-            echo 'Build failed!'
+            githubNotify context: 'CI', status: 'failure', description: 'Build failure!'
         }
     }
 }
