@@ -4,7 +4,7 @@ export class SessionValidation {
   static readonly CREATE : ZodType = z.object({
     refreshToken : z.string({
       required_error: "Refresh token is required"
-    }).min(1, "Refresh token must contain at least 1 character").max(255, "Refresh token cannot be longer than 255 characters"),
+    }).min(1, "Refresh token must contain at least 1 character").max(500, "Refresh token cannot be longer than 255 characters"),
     userId: z.number({
       required_error: "User ID is required"
     }).int(),
