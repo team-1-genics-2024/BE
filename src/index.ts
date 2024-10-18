@@ -11,6 +11,7 @@ import { productRouter } from "./router/productRouter";
 const app = express();
 
 app.use(cookieParser())
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
