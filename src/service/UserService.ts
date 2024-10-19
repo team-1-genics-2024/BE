@@ -1,5 +1,6 @@
 import {
    CreateUserRequest, 
+   CreateUserResponse,
    GetAllUsersResponse, 
    GetUserResponse, 
    UpdatePasswordGoogleUser, 
@@ -16,7 +17,7 @@ import { verifyOldPassword } from "../utils/verifyOldPassword";
 
 export class UserService {
 
-  static async registerUser (request: CreateUserRequest) {
+  static async registerUser (request: CreateUserRequest): Promise<CreateUserResponse> {
     const data = Validation.validation(UserValidation.REGISTER, request);
 
     const userExists = await UserRepository.findByEmail(data.email);
@@ -28,7 +29,12 @@ export class UserService {
     const salt: number = parseInt(process.env.SALT_ROUNDS || "");
     data.password = await bcrypt.hash(data.password, salt);
 
-    return await UserRepository.create(data.email, data.password, data.name);
+    const user = await UserRepository.create(data.email, data.password, data.name);
+
+    return {
+      name: user.name,
+      email: user.email,
+    };
   }
 
   static async updatePasswordForGoogleUser(auth: AuthRequest, request: UpdatePasswordGoogleUser): Promise<UpdateUserResponse> {
