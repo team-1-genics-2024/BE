@@ -19,9 +19,6 @@ pipeline {
                 withCredentials([file(credentialsId: 'env-file', variable: 'ENV_FILE')]) {
                     // Menyalin secret file dari Jenkins credentials ke dalam workspace sebagai .env
                     sh 'cp $ENV_FILE .env'
-                    
-                    // Menampilkan environment variable tertentu (untuk debugging)
-                    sh 'echo "Loaded environment: DATABASE_URL=$DATABASE_URL"'
                 }
             }
         }
