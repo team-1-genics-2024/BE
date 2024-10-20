@@ -9,7 +9,7 @@ export class UserRepository {
         email: email,
         password: hashedPassword,
         name: name,
-        googleId: googleId || null
+        googleId: googleId || null,
       }
     });
   }
