@@ -15,28 +15,137 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique @db.VarChar(100)
-  password  String?  @db.VarChar(100)
-  name      String   @db.VarChar(100)
-  googleId  String?  @unique @db.VarChar(100)
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  id          Int          @id @default(autoincrement())
+  email       String       @unique @db.VarChar(100)
+  password    String?      @db.VarChar(100)
+  name        String       @db.VarChar(100)
+  googleId    String?      @unique @db.VarChar(100)
+  createdAt   DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime     @default(now()) @db.Timestamp(6)
+  membership  Membership?
+  payments    Payment[]
+  enrollments Enrollment[]
+  results     Result[]
 
   @@index([email])
   @@map("users")
 }
 
-model Session {
-  id           String   @id @default(uuid())
-  userId       Int
-  refreshToken String   @unique @db.VarChar(255)
-  user_agent   String   @db.VarChar(255)
-  ip_address   String   @db.VarChar(255)
-  last_active  DateTime @default(now()) @db.Timestamp(6)
-  is_timed_out Boolean  @default(false)
-  expiry       Int
+model Membership {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  endDate   DateTime @default(now()) @db.Timestamp(6)
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([refreshToken])
-  @@map("sessions")
+  @@map("memberships")
+}
+
+model Payment {
+  id     Int      @id @default(autoincrement())
+  method String   @db.VarChar(50)
+  amount Float    @db.DoublePrecision
+  date   DateTime @default(now()) @db.Timestamp(6)
+  userId Int
+  user   User     @relation(fields: [userId], references: [id])
+
+  @@map("payments")
+}
+
+model Class {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(100)
+  description String       @db.Text
+  imageUrl    String       @db.Text
+  createdAt   DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime     @default(now()) @db.Timestamp(6)
+  enrollments Enrollment[]
+  topics      Topic[]
+
+  @@map("classes")
+}
+
+model Enrollment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  classId   Int
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@map("enrollments")
+}
+
+model Topic {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(100)
+  classId   Int
+  createdAt DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt DateTime   @default(now()) @db.Timestamp(6)
+  class     Class      @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subtopics Subtopic[]
+  results   Result[]
+
+  @@map("topics")
+}
+
+model Subtopic {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(100)
+  description String   @db.Text
+  imageUrl    String   @db.Text
+  videoUrl    String   @db.Text
+  topicId     Int
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @db.Timestamp(6)
+  topic       Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@map("subtopics")
+}
+
+model Quiz {
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(100)
+  totalMarks Int
+  createdAt  DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime   @default(now()) @db.Timestamp(6)
+  questions  Question[]
+  results    Result[]
+
+  @@map("quizzes")
+}
+
+model Question {
+  id         Int      @id @default(autoincrement())
+  question   String   @db.Text
+  optionA    String   @db.Text
+  optionB    String   @db.Text
+  optionC    String   @db.Text
+  optionD    String   @db.Text
+  correctAns String   @db.VarChar(1)
+  marks      Int
+  quizId     Int
+  createdAt  DateTime @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime @default(now()) @db.Timestamp(6)
+  quiz       Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("questions")
+}
+
+model Result {
+  id        Int      @id @default(autoincrement())
+  score     Int
+  quizId    Int
+  userId    Int
+  topicId   Int
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@map("results")
 }

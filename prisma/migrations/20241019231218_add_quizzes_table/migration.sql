@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE "quizzes" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(100) NOT NULL,
+    "totalMarks" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "quizzes_pkey" PRIMARY KEY ("id")
+);
