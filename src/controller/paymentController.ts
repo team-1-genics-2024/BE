@@ -8,12 +8,29 @@ import {
   PaymentNotificationResponse,
   PaymentPayload,
 } from "../model/paymentModel";
+import { AuthRequest } from "../model/AuthModel";
+import { UserRepository } from "../repository/UserRepository";
 
 export const paymentController = {
   async payment(req: Request, res: Response) {
     try {
       const paymentReq = req.body as PaymentPayload;
+      const user  = req as AuthRequest;
+      const userId = user.user.id;
       paymentReq.transaction_details.order_id = uuidv4();
+
+      const me = await UserRepository.findById(userId)
+      if (!me) {
+        throw new ResponseError(404, "User not found");
+      }
+
+      if (!paymentReq.customer_details) {
+        paymentReq.customer_details = {
+          first_name: me.name,
+          email: me.email,
+          userId: userId,
+        }
+      }
 
       const paymentRes = await PaymentService.payment(paymentReq);
 

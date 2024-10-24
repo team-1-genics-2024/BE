@@ -22,9 +22,9 @@ app.use(
 app.use(express.json());
 app.use(requestip.mw());
 
-// app.use("/api/users", userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/payment", paymentRouter);
-// app.use("/api/auth", authRouter);
+app.use("/api/auth", authRouter);
 
 app.listen(process.env.PORT_SERVER || 5000, () => {
   console.log(`Server is running on port ${process.env.PORT_SERVER || 5000}`);

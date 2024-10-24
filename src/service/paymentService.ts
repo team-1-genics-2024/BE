@@ -9,14 +9,12 @@ import { PaymentRepository } from "../repository/paymentRepository";
 export class PaymentService {
   static async payment(data: PaymentPayload) {
     if (!data.transaction_details || !data.customer_details) {
-      throw new Error("Data not found");
+      throw new ResponseError(404, "Data not found");
     }
-
     const transaction = await snap.createTransaction(data);
     await PaymentRepository.create(data);
-    console.log(transaction);
+
     const transactionUrl = transaction.redirect_url;
-    console.log(transaction);
     return transactionUrl;
     // return await data;
   }

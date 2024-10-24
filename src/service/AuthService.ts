@@ -70,7 +70,8 @@ export class AuthService {
     
     const validSessionReq = Validation.validation(SessionValidation.CREATE, session);
     const sessionKey = toSessionKey(user.id);
-    await SessionRepository.create(sessionKey, validSessionReq);
+    // --- SORI GES BENTAR AKU COMMENT DULU YA 'JUAN'
+    // await SessionRepository.create(sessionKey, validSessionReq);
 
     return {
       accessToken: token,
