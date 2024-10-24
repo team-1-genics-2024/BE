@@ -4,6 +4,7 @@ import {
 } from "../model/paymentModel";
 import { snap } from "../config/payment";
 import { ResponseError } from "../error/ResponseError";
+import { PaymentRepository } from "../repository/paymentRepository";
 
 export class PaymentService {
   static async payment(data: PaymentPayload) {
@@ -12,6 +13,7 @@ export class PaymentService {
     }
 
     const transaction = await snap.createTransaction(data);
+    await PaymentRepository.create(data);
     console.log(transaction);
     const transactionUrl = transaction.redirect_url;
     console.log(transaction);
@@ -23,5 +25,8 @@ export class PaymentService {
     if (data.transaction_status !== "settlement") {
       throw new ResponseError(400, "Payment not settled");
     }
+
+    const payment = await PaymentRepository.update(data.order_id, data);
+    return payment;
   }
 }

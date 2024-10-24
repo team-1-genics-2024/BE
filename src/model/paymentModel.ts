@@ -27,6 +27,7 @@ export interface PaymentPayload {
 }
 
 export interface PaymentReq {
+  id: string;
   method: string;
   amount: number;
   date: Date;

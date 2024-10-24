@@ -39,11 +39,12 @@ export const paymentController = {
         req.body as PaymentNotificationResponse;
 
       console.log(transactionRes);
+      const paymentRes = await PaymentService.paymentSuccess(transactionRes);
       //   console.log(req.body);
       // const paymentReq = req.body as PaymentReq;
       // const paymentRes = await PaymentService.notification(paymentReq);
 
-      successResponse(res, StatusCodes.OK, "Notification success");
+      successResponse(res, StatusCodes.OK, "Notification success", paymentRes);
     } catch (error) {
       if (error instanceof Error) {
         errorResponse(res, error);

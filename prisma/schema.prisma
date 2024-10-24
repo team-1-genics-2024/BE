@@ -48,6 +48,7 @@ model Payment {
   method String   @db.VarChar(50)
   amount Float    @db.DoublePrecision
   date   DateTime @default(now()) @db.Timestamp(6)
+  status String   @db.VarChar(50) @default("pending")
   userId Int
   user   User     @relation(fields: [userId], references: [id])
 
