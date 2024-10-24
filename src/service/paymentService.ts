@@ -22,11 +22,8 @@ export class PaymentService {
   }
 
   static async paymentSuccess(data: PaymentNotificationResponse) {
-    if (data.transaction_status !== "settlement") {
-      throw new ResponseError(400, "Payment not settled");
+    if (data.transaction_status == "settlement") {
+      await PaymentRepository.update(data.order_id, data);
     }
-
-    const payment = await PaymentRepository.update(data.order_id, data);
-    return payment;
   }
 }
