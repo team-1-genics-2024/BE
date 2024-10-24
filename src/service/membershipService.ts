@@ -7,7 +7,7 @@ import { MembershipRepository } from "../repository/mebershipRepository";
 
 export class MembershipService {
   static async create(
-    req: CreateMembershipRequest
+    req: number
   ): Promise<CreateMembershipResponse> {
     const membershipReq = req;
     const membership = await MembershipRepository.create(membershipReq);

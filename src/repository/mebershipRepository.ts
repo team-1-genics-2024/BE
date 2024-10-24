@@ -1,15 +1,16 @@
 import db from "../config/database";
 import { Membership } from "@prisma/client";
-import { CreateMembershipRequest } from "../model/membershipModel";
 
 const database = db;
 
 export class MembershipRepository {
   static async create(
-    membership: CreateMembershipRequest
+    id: number
   ): Promise<Membership> {
     return await database.membership.create({
-      data: membership,
+      data: {
+        userId: id,
+      },
     });
   }
 

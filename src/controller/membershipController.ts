@@ -7,13 +7,16 @@ import { MembershipService } from "../service/membershipService";
 import { StatusCodes } from "http-status-codes";
 import { errorResponse, successResponse } from "../utils/api-response";
 import { ResponseError } from "../error/ResponseError";
+import { AuthRequest } from "../model/AuthModel";
 
 export class MembershipController {
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const membershipReq: CreateMembershipRequest =
-        req.body as CreateMembershipRequest;
-      const membershipRes = await MembershipService.create(membershipReq);
+      const user = req as AuthRequest;
+      const userId = user.user.id;
+      // const membershipReq: CreateMembershipRequest =
+      //   req.body as CreateMembershipRequest;
+      const membershipRes = await MembershipService.create(userId);
 
       successResponse(
         res,
@@ -39,8 +42,10 @@ export class MembershipController {
 
   static async updateByUserId(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = Number(req.params.id);
-      const membershipRes = await MembershipService.updateByUserId(id);
+      // const id = Number(req.params.id);
+      const user = req as AuthRequest;
+      const userId = user.user.id;
+      const membershipRes = await MembershipService.updateByUserId(userId);
 
       successResponse(res, StatusCodes.OK, "Membership updated", membershipRes);
     } catch (e) {
