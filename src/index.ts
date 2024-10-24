@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 
 import { userRouter } from "./router/userRouter";
 import { authRouter } from "./router/authRouter";
-import { productRouter } from "./router/productRouter";
+import { paymentRouter } from "./router/paymentRouter";
 
 const app = express();
 
@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(requestip.mw());
 
 // app.use("/api/users", userRouter);
-app.use("/api/product", productRouter);
+app.use("/api/payment", paymentRouter);
 // app.use("/api/auth", authRouter);
 
 app.listen(process.env.PORT_SERVER || 5000, () => {

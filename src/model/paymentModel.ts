@@ -22,5 +22,13 @@ export interface PaymentPayload {
   customer_details: {
     first_name: string;
     email: string;
+    userId: number;
   };
+}
+
+export interface PaymentReq {
+  method: string;
+  amount: number;
+  date: Date;
+  userId: number;
 }

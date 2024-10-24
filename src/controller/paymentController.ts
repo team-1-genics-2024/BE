@@ -1,17 +1,23 @@
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import { productService } from "../service/productService";
-import { ProductPayment } from "../model/productModel";
+import { v4 as uuidv4 } from "uuid";
+import { PaymentService } from "../service/paymentService";
 import { successResponse, errorResponse } from "../utils/api-response";
 import { ResponseError } from "../error/ResponseError";
+import {
+  PaymentNotificationResponse,
+  PaymentPayload,
+} from "../model/paymentModel";
 
-export const productController = {
+export const paymentController = {
   async payment(req: Request, res: Response) {
     try {
-      const productReq = req.body as ProductPayment;
-      const productRes = await productService.payment(productReq);
+      const paymentReq = req.body as PaymentPayload;
+      paymentReq.transaction_details.order_id = uuidv4();
 
-      successResponse(res, StatusCodes.OK, "Payment success", productRes);
+      const paymentRes = await PaymentService.payment(paymentReq);
+
+      successResponse(res, StatusCodes.OK, "Payment success", paymentRes);
     } catch (error) {
       if (error instanceof Error) {
         errorResponse(res, error);
@@ -29,9 +35,13 @@ export const productController = {
 
   async notification(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log(req.body);
-      // const productReq = req.body as ProductPayment;
-      // const productRes = await productService.notification(productReq);
+      const transactionRes: PaymentNotificationResponse =
+        req.body as PaymentNotificationResponse;
+
+      console.log(transactionRes);
+      //   console.log(req.body);
+      // const paymentReq = req.body as PaymentReq;
+      // const paymentRes = await PaymentService.notification(paymentReq);
 
       successResponse(res, StatusCodes.OK, "Notification success");
     } catch (error) {
