@@ -14,6 +14,9 @@
     "deploy:dev": "pm2 startOrRestart ecosystem.config.js --env development --update-env",
     "deploy:prod": "pm2 startOrRestart ecosystem.config.js --env production --update-env"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "jest": {
     "transform": {
       "^.+\\.[t|j]sx?$": "babel-jest"
