@@ -21,7 +21,7 @@ export class PaymentService {
 
   static async paymentSuccess(data: PaymentNotificationResponse) {
     if (data.transaction_status == "settlement") {
-      await PaymentRepository.update(data.order_id, data);
+      return await PaymentRepository.update(data.order_id, data);
     }
   }
 }

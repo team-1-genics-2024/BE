@@ -10,6 +10,7 @@ import {
 } from "../model/paymentModel";
 import { AuthRequest } from "../model/AuthModel";
 import { UserRepository } from "../repository/UserRepository";
+import { MembershipService } from "../service/membershipService";
 
 export const paymentController = {
   async payment(req: Request, res: Response) {
@@ -18,6 +19,7 @@ export const paymentController = {
       const user  = req as AuthRequest;
       const userId = user.user.id;
       paymentReq.transaction_details.order_id = uuidv4();
+      console.log(paymentReq);
 
       const me = await UserRepository.findById(userId)
       if (!me) {
@@ -55,11 +57,17 @@ export const paymentController = {
       const transactionRes: PaymentNotificationResponse =
         req.body as PaymentNotificationResponse;
 
-      console.log(transactionRes);
-      await PaymentService.paymentSuccess(transactionRes);
-      //   console.log(req.body);
-      // const paymentReq = req.body as PaymentReq;
-      // const paymentRes = await PaymentService.notification(paymentReq);
+        // console.log(transactionRes);
+      const paymentRes = await PaymentService.paymentSuccess(transactionRes);
+      console.log(paymentRes);
+      if (paymentRes) {
+        await MembershipService.updateByUserId(paymentRes.userId);
+      }
+
+      // const user = req as AuthRequest;
+      // const userId = user.user.id;
+      // await MembershipService.updateByUserId(userId);
+      // console.log(paymentRes);
 
       successResponse(res, StatusCodes.OK, "Notification success");
     } catch (error) {
