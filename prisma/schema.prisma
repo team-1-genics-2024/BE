@@ -64,6 +64,7 @@ model Class {
   enrollments Enrollment[]
   topics      Topic[]
 
+  @@index([name])
   @@map("classes")
 }
 
