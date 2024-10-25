@@ -7,6 +7,9 @@ import cookieParser from "cookie-parser";
 import { userRouter } from "./router/userRouter";
 import { authRouter } from "./router/authRouter";
 import { productRouter } from "./router/productRouter";
+import dotenv from 'dotenv';
+import { topicRouter } from "./router/TopicRouter";
+dotenv.config();
 
 const app = express();
 
@@ -22,9 +25,14 @@ app.use(
 app.use(express.json());
 app.use(requestip.mw())
 
+app.get("/ping", (req, res) => {
+  res.send("pong");
+});
+
 app.use("/api/users", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/topic", topicRouter)
 
 app.listen(process.env.PORT_SERVER || 5000, () => {
   console.log(`Server is running on port ${process.env.PORT_SERVER || 5000}`);
