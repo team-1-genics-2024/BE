@@ -1,5 +1,6 @@
 import db from "../src/config/database";
 import { userSeeds } from "../src/seeders/userSeed";
+import bcrypt from "bcrypt";
 const database = db;
 
 const isUser: boolean = true;
@@ -11,11 +12,29 @@ async function main() {
     await database.$executeRaw`TRUNCATE TABLE "users" RESTART IDENTITY CASCADE`;
     await database.$executeRaw`TRUNCATE TABLE "memberships" RESTART IDENTITY CASCADE`;
 
-    for (const user of userSeeds) {
+    for (let i = 0; i < userSeeds.length; i++) {
+      const salt: number = parseInt(process.env.SALT_ROUNDS || "");
+      userSeeds[i].password = await bcrypt.hash(userSeeds[i].password, salt);
+
       await database.user.create({
-        data: user,
+        data: userSeeds[i],
+      });
+
+      await database.membership.create({
+        data: {
+          userId: i + 1,
+        },
       });
     }
+
+    // for (const user of userSeeds) {
+    //   const salt: number = parseInt(process.env.SALT_ROUNDS || "");
+    //   user.password = await bcrypt.hash(user.password, salt);
+
+    //   await database.user.create({
+    //     data: user,
+    //   });
+    // }
   }
 }
 

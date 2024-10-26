@@ -16,12 +16,12 @@ export const paymentController = {
   async payment(req: Request, res: Response) {
     try {
       const paymentReq = req.body as PaymentPayload;
-      const user  = req as AuthRequest;
+      const user = req as AuthRequest;
       const userId = user.user.id;
       paymentReq.transaction_details.order_id = uuidv4();
       console.log(paymentReq);
 
-      const me = await UserRepository.findById(userId)
+      const me = await UserRepository.findById(userId);
       if (!me) {
         throw new ResponseError(404, "User not found");
       }
@@ -31,7 +31,7 @@ export const paymentController = {
           first_name: me.name,
           email: me.email,
           userId: userId,
-        }
+        };
       }
 
       const paymentRes = await PaymentService.payment(paymentReq);
@@ -57,10 +57,10 @@ export const paymentController = {
       const transactionRes: PaymentNotificationResponse =
         req.body as PaymentNotificationResponse;
 
-        // console.log(transactionRes);
+      // console.log(transactionRes);
       const paymentRes = await PaymentService.paymentSuccess(transactionRes);
-      console.log(paymentRes);
-      if (paymentRes) {
+      // console.log(paymentRes);
+      if (paymentRes.status == "settlement" || paymentRes.status == "capture") {
         await MembershipService.updateByUserId(paymentRes.userId);
       }
 

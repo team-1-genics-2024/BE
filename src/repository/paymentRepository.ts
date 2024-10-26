@@ -14,7 +14,6 @@ export class PaymentRepository {
       id: payment.transaction_details.order_id,
       userId: payment.customer_details.userId,
       amount: payment.transaction_details.gross_amount,
-      method: "gopay",
       date: new Date(),
     };
     return await database.payment.create({

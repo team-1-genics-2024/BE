@@ -45,7 +45,7 @@ model Membership {
 
 model Payment {
   id     String      @id @default(uuid())
-  method String   @db.VarChar(50)
+  method String?   @db.VarChar(50)
   amount Float    @db.DoublePrecision
   date   DateTime @default(now()) @db.Timestamp(6)
   status String   @db.VarChar(50) @default("pending")
