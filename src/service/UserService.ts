@@ -14,6 +14,7 @@ import { Validation } from "../utils/validation";
 import { ResponseError } from "../error/ResponseError";
 import bcrypt from "bcrypt";
 import { verifyOldPassword } from "../utils/verifyOldPassword";
+import { MembershipRepository } from "../repository/mebershipRepository";
 
 export class UserService {
 
@@ -30,6 +31,8 @@ export class UserService {
     data.password = await bcrypt.hash(data.password, salt);
 
     const user = await UserRepository.create(data.email, data.password, data.name);
+
+    await MembershipRepository.create(user.id);
 
     return {
       name: user.name,
