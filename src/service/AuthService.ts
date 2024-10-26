@@ -78,6 +78,51 @@ export class AuthService {
     }
   }
 
+  static async loginWithGoogle (request: AuthRequest): Promise<LoginResponse> {
+    const user = request.user;
+
+    if (!user) {
+      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
+    }
+
+    const payload: TokenPayload = {
+      userId: user.id,
+      userAgent: request.headers['user-agent'] as string,
+    };
+
+    const token = JwtToken.generateToken(payload);
+
+    const userAgent = request.headers['user-agent'] as string;
+    const ipAddress = request.ip as string;
+
+    const refreshPayload: RefreshTokenPayload = {
+      userId: user.id,
+      userAgent: userAgent,
+    };
+    
+    const refreshToken = JwtToken.generateRefreshToken(refreshPayload);
+    const refreshExpiry = JwtToken.extractTokenExpiration(refreshToken);
+
+    const session: Session = {
+      userId: user.id,
+      refreshToken: refreshToken,
+      userAgent: userAgent,
+      ipAddress: ipAddress,
+      lastActive: new Date(Date.now()),
+      isTimedOut: false,
+      expiry: refreshExpiry,
+    }
+    
+    const validSessionReq = Validation.validation(SessionValidation.CREATE, session);
+    const sessionKey = toSessionKey(user.id);
+    await SessionRepository.create(sessionKey, validSessionReq);
+
+    return {
+      accessToken: token,
+      refreshToken: refreshToken,
+    }
+  }
+
   static async refreshUserToken (request: RefreshRequest): Promise<RefreshResponse> {
     const data = Validation.validation(SessionValidation.REFRESH_TOKEN, request);
 
