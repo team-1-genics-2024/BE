@@ -6,3 +6,4 @@ export const paymentRouter = express.Router();
 
 paymentRouter.post("/", AuthMiddleware, paymentController.payment);
 paymentRouter.post("/notification", paymentController.notification);
+paymentRouter.get("/", paymentController.getAll);

@@ -92,4 +92,25 @@ export class MembershipController {
       next(e);
     }
   }
+
+  static async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const memberships = await MembershipService.getAll();
+
+      successResponse(res, StatusCodes.OK, "Memberships found", memberships);
+    } catch (e) {
+      if (e instanceof Error) {
+        errorResponse(res, e);
+      } else {
+        errorResponse(
+          res,
+          new ResponseError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            "Internal Server Error"
+          )
+        );
+      }
+      next(e);
+    }
+  }
 }

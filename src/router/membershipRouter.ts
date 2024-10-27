@@ -8,3 +8,4 @@ export const membershipRouter = express.Router();
 membershipRouter.post("/", AuthMiddleware, MembershipController.create);
 membershipRouter.get("/:id", MembershipController.getById);
 membershipRouter.put("/", AuthMiddleware, MembershipController.updateByUserId);
+membershipRouter.get("/", MembershipController.getAll);
