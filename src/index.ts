@@ -3,11 +3,15 @@ import express from "express";
 import cors from "cors";
 import requestip from "request-ip";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 
 import { userRouter } from "./router/userRouter";
 import { authRouter } from "./router/authRouter";
 import { paymentRouter } from "./router/paymentRouter";
 import { membershipRouter } from "./router/membershipRouter";
+import { topicRouter } from "./router/TopicRouter";
+
+dotenv.config();
 
 const app = express();
 
@@ -27,6 +31,7 @@ app.use("/api/users", userRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/membership", membershipRouter);
+app.use("/api/topic", topicRouter);
 
 app.listen(process.env.PORT_SERVER || 5000, () => {
   console.log(`Server is running on port ${process.env.PORT_SERVER || 5000}`);
