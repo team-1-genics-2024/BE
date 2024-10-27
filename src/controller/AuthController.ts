@@ -5,7 +5,6 @@ import { successResponse, errorResponse } from "../utils/api-response";
 import { ResponseError } from "../error/ResponseError";
 import { AuthRequest, LoginRequest } from "../model/AuthModel";
 import { appLogger } from "../config/logConfig";
-import { parse } from "dotenv";
 
 export class AuthController {
   static async login(req: Request, res: Response) {
@@ -36,6 +35,31 @@ export class AuthController {
         errorResponse(res, new ResponseError (StatusCodes.INTERNAL_SERVER_ERROR, 'Internal Server Error'));
       }
     }
+  }
+
+  static async loginWithGoogle(req: Request, res: Response) {
+   try {
+      const request = req as AuthRequest;
+      const response = await AuthService.loginWithGoogle(request);
+
+      res.cookie('accessToken', response.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRY as string),
+      });
+
+      res.cookie('refreshToken', response.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: parseInt(process.env.SESSION_EXPIRY as string),
+      });
+
+      res.redirect(process.env.CLIENT_REDIRECT_URL as string);
+   } catch (err) {
+      res.redirect(process.env.CLIENT_FAILED_REDIRECT_URL as string);
+   } 
   }
 
   static async refreshToken (req: Request, res: Response) {

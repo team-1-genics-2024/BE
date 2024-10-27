@@ -1,10 +1,19 @@
-import passport from "passport";
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { UserRepository } from "../repository/UserRepository";
 import { User } from "../model/AuthModel";
+import { Request } from "express";
+import { appLogger } from "../config/logConfig";
+
+const cookieExtractor = (req: Request) => {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies['accessToken'];
+  }
+  return token;
+}
 
 const opt = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor, ExtractJwt.fromAuthHeaderAsBearerToken()]),
   secretOrKey: process.env.JWT_SECRET as string,
 };
 

@@ -2,6 +2,7 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { UserRepository } from "../repository/UserRepository";
 import { AuthRequest, User } from "../model/AuthModel";
+import { MembershipRepository } from "../repository/mebershipRepository";
 
 const googleConfig = {
   clientID: process.env.GOOGLE_CLIENT_ID as string,
@@ -27,6 +28,9 @@ const googleStrategy = new GoogleStrategy(googleConfig, async (accessToken, refr
         id: newUser.id,
         name: newUser.name,
       }
+
+      await MembershipRepository.create(user.id);
+
     } else {
       if (!existingUser.googleId) {
         await UserRepository.findByIdAndUpdate(existingUser.id, {
