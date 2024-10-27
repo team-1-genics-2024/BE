@@ -25,10 +25,6 @@ app.use(
 app.use(express.json());
 app.use(requestip.mw())
 
-app.get("/ping", (req, res) => {
-  res.send("pong");
-});
-
 app.use("/api/users", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/auth", authRouter);
