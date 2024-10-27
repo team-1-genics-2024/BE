@@ -35,4 +35,8 @@ export class MembershipRepository {
       },
     });
   }
+
+  static async getAll(): Promise<Membership[]> {
+    return await database.membership.findMany();
+  }
 }

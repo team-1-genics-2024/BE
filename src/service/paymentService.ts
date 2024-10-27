@@ -22,4 +22,9 @@ export class PaymentService {
   static async paymentSuccess(data: PaymentNotificationResponse) {
     return await PaymentRepository.update(data.order_id, data);
   }
+
+  static async getAll() {
+    return await PaymentRepository.getAll();
+  }
+
 }

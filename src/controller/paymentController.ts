@@ -85,4 +85,25 @@ export const paymentController = {
       next(error);
     }
   },
+
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const paymentRes = await PaymentService.getAll();
+
+      successResponse(res, StatusCodes.OK, "Get all payment", paymentRes);
+    } catch (error) {
+      if (error instanceof Error) {
+        errorResponse(res, error);
+      } else {
+        errorResponse(
+          res,
+          new ResponseError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            "Internal Server Error"
+          )
+        );
+      }
+      next(error);
+    }
+  },
 };

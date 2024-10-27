@@ -30,4 +30,8 @@ export class MembershipService {
   static async getById(id: number) {
     return await MembershipRepository.getById(id);
   }
+
+  static async getAll() {
+    return await MembershipRepository.getAll();
+  }
 }

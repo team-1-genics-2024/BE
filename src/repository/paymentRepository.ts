@@ -36,4 +36,8 @@ export class PaymentRepository {
       data: payment,
     });
   }
+
+  static async getAll(): Promise<Payment[]> {
+    return await database.payment.findMany();
+  }
 }
