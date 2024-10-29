@@ -3,15 +3,12 @@ import express from "express";
 import cors from "cors";
 import requestip from "request-ip";
 import cookieParser from "cookie-parser";
-import dotenv from "dotenv";
 
 import { userRouter } from "./router/userRouter";
 import { authRouter } from "./router/authRouter";
 import { paymentRouter } from "./router/paymentRouter";
 import { membershipRouter } from "./router/membershipRouter";
 import { topicRouter } from "./router/TopicRouter";
-
-dotenv.config();
 
 const app = express();
 
