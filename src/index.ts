@@ -8,6 +8,7 @@ import { userRouter } from "./router/userRouter";
 import { authRouter } from "./router/authRouter";
 import { productRouter } from "./router/productRouter";
 import { classRouter } from "./router/classRouter";
+import { enrollRouter } from "./router/enrollRouter";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/users", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/class", classRouter);
+app.use("/api/enroll", enrollRouter);
 
 app.listen(process.env.PORT_SERVER || 5000, () => {
   console.log(`Server is running on port ${process.env.PORT_SERVER || 5000}`);
