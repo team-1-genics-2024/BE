@@ -65,6 +65,7 @@ model Class {
   enrollments Enrollment[]
   topics      Topic[]
 
+  @@index([name])
   @@map("classes")
 }
 
@@ -77,6 +78,7 @@ model Enrollment {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
 
+  @@index([userId, classId])
   @@map("enrollments")
 }
 
