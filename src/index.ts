@@ -9,10 +9,12 @@ import { authRouter } from "./router/authRouter";
 import { paymentRouter } from "./router/paymentRouter";
 import { membershipRouter } from "./router/membershipRouter";
 import { topicRouter } from "./router/TopicRouter";
+import { classRouter } from "./router/classRouter";
+import { enrollRouter } from "./router/enrollRouter";
 
 const app = express();
 
-app.use(cookieParser());
+app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
@@ -22,13 +24,15 @@ app.use(
   })
 );
 app.use(express.json());
-app.use(requestip.mw());
+app.use(requestip.mw())
 
 app.use("/api/users", userRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/membership", membershipRouter);
 app.use("/api/topic", topicRouter);
+app.use("/api/class", classRouter);
+app.use("/api/enroll", enrollRouter);
 
 app.listen(process.env.PORT_SERVER || 5000, () => {
   console.log(`Server is running on port ${process.env.PORT_SERVER || 5000}`);
