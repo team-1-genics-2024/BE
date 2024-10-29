@@ -7,7 +7,7 @@
     "test": "jest",
     "dev": "nodemon",
     "build": "npx tsc",
-    "seed:classes": "ts-node src/seed/ClassSeeder.ts",
+    "seed:classes": "ts-node ./src/seed/ClassSeeder.ts",
     "up:windows": "docker compose up -d",
     "up:linux": "sudo docker-compose up -d",
     "start:dev": "cross-env NODE_ENV=development ts-node dist/index.js",
