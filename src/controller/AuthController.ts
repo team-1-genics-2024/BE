@@ -80,4 +80,21 @@ export class AuthController {
       }
     }
   }
+
+  static async logout (req: Request, res: Response) {
+    try {
+      const request = req as AuthRequest;
+      const logoutReq = {
+        userId: request.user.id
+      };
+      const response = await AuthService.logoutUser(logoutReq);
+      successResponse(res, StatusCodes.OK, "Logout Success", response);
+    } catch (err) {
+      if (err instanceof Error) {
+        errorResponse(res, err);
+      } else {
+        errorResponse(res, new ResponseError (StatusCodes.INTERNAL_SERVER_ERROR, 'Internal Server Error'));
+      }
+    }
+  }
 }

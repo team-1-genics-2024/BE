@@ -9,5 +9,6 @@ authRouter.post("/login", AuthController.login);
 authRouter.get("/google", GoogleAuthMiddleware.concern);
 authRouter.get("/google/callback", GoogleAuthMiddleware.callback, AuthController.loginWithGoogle);
 authRouter.post("/refresh", AuthController.refreshToken);
+authRouter.post("/logout", AuthMiddleware, AuthController.logout);
 
 

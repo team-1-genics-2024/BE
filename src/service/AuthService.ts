@@ -5,7 +5,8 @@ import {
   RefreshRequest, 
   RefreshResponse, 
   TokenPayload, 
-  RefreshTokenPayload 
+  RefreshTokenPayload,
+  LogoutRequest 
 } from "../model/AuthModel";
 import { UserRepository } from "../repository/UserRepository";
 import { SessionRepository } from "../repository/SessionRepository";
@@ -157,5 +158,12 @@ export class AuthService {
     return {
       accessToken: token,
     }
+  }
+
+  static async logoutUser (request: LogoutRequest): Promise<void> {
+    const userId = request.userId as number;
+    const sessionKey = toSessionKey(userId);
+
+    await SessionRepository.deleteByKey(sessionKey);
   }
 }

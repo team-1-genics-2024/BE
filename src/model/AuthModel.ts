@@ -52,3 +52,7 @@ export interface Session {
   isTimedOut: boolean;
   expiry: number;
 }
+
+export interface LogoutRequest {
+  userId: number;
+}
