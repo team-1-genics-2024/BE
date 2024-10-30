@@ -87,8 +87,8 @@ export class AuthController {
       const logoutReq = {
         userId: request.user.id
       };
-      const response = await AuthService.logoutUser(logoutReq);
-      successResponse(res, StatusCodes.OK, "Logout Success", response);
+      await AuthService.logoutUser(logoutReq);
+      successResponse(res, StatusCodes.OK, "Logout Success");
     } catch (err) {
       if (err instanceof Error) {
         errorResponse(res, err);

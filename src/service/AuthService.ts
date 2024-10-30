@@ -160,9 +160,15 @@ export class AuthService {
     }
   }
 
-  static async logoutUser (request: LogoutRequest): Promise<void> {
+  static async logoutUser (request: LogoutRequest) {
     const userId = request.userId as number;
     const sessionKey = toSessionKey(userId);
+
+    const session = await SessionRepository.findByKey(sessionKey);
+
+    if (!session) {
+      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
+    }
 
     await SessionRepository.deleteByKey(sessionKey);
   }
