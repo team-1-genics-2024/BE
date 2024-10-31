@@ -36,6 +36,14 @@ export class MembershipRepository {
     });
   }
 
+  static async findByUserId(userId: number): Promise<Membership | null> {
+    return await database.membership.findFirst({
+      where: {
+        userId: userId,
+      },
+    });
+  }
+
   static async getAll(): Promise<Membership[]> {
     return await database.membership.findMany();
   }
