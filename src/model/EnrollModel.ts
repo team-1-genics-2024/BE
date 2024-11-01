@@ -1,4 +1,9 @@
-import { Class } from "./ClassModel";
+interface EnrolledClass {
+  id: number;
+  name: string;
+  description: string;
+  imageUrl: string;
+}
 
 export interface EnrollRequest {
   userId: number;
@@ -15,5 +20,5 @@ export interface GetEnrolledClassRequest {
 }
 
 export interface GetEnrolledClassResponse {
-  classes: Class[];
+  classes: EnrolledClass[];
 }

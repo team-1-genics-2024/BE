@@ -3,6 +3,9 @@ export interface Class {
   name: string;
   description: string;
   imageUrl: string;
+  totalTopics: number;
+  totalSubtopics: number;
+  totalParticipants: number;
 }
 
 export interface GetClassByIdRequest {

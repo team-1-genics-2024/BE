@@ -6,7 +6,23 @@ export class ClassRepository {
 
   static async findById(id: number) {
     return await db.class.findUnique({
-      where: { id }
+      where: { id },
+      include: {
+        topics: {
+          include: {
+            _count: {
+              select: {
+                subtopics: true
+              }
+            }
+          }
+        },
+        _count: {
+          select: {
+            topics: true
+          }
+        }
+      }
     });
   }
 
@@ -17,21 +33,54 @@ export class ClassRepository {
           {
             name: {
               contains: keyword,
-              mode: 'insensitive' 
+              mode: 'insensitive'
             }
           },
           {
             description: {
               contains: keyword,
-              mode: 'insensitive' 
+              mode: 'insensitive'
             }
           }
         ]
+      },
+      include: {
+        topics: {
+          include: {
+            _count: {
+              select: {
+                subtopics: true
+              }
+            }
+          }
+        },
+        _count: {
+          select: {
+            topics: true
+          }
+        }
       }
     });
   }
-   
+
   static async findAll() {
-    return await db.class.findMany();
+    return await db.class.findMany({
+      include: {
+        topics: {
+          include: {
+            _count: {
+              select: {
+                subtopics: true
+              }
+            }
+          }
+        },
+        _count: {
+          select: {
+            topics: true
+          }
+        }
+      }
+    });
   }
 }
