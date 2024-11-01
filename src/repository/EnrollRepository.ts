@@ -31,4 +31,12 @@ export class EnrollRepository {
       }
     });
   }
+
+  static async countByClassId(classId: number) {
+    return await db.enrollment.count({
+      where: {
+        classId
+      }
+    });
+  }
 }

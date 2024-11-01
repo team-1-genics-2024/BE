@@ -5,6 +5,7 @@ export interface Class {
   imageUrl: string;
   totalTopics: number;
   totalSubtopics: number;
+  totalParticipants: number;
 }
 
 export interface GetClassByIdRequest {

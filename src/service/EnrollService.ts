@@ -11,6 +11,7 @@ import { ResponseError } from "../error/ResponseError";
 import { StatusCodes } from "http-status-codes";
 import { Validation } from "../utils/validation";
 import { EnrollValidation } from "../validation/EnrollValidation";
+import { ParticipantUtils } from "../utils/participant";
 
 export class EnrollService {
   static async enrollUser(request: EnrollRequest): Promise<EnrollResponse> {
@@ -35,6 +36,8 @@ export class EnrollService {
     }
 
     const enroll = await EnrollRepository.create(data.userId, data.classId);
+
+    await ParticipantUtils.incrementParticipantCount(data.classId);
 
     return {
       userId: enroll.userId,

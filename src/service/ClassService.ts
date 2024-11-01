@@ -10,6 +10,7 @@ import { ResponseError } from '../error/ResponseError';
 import { StatusCodes } from 'http-status-codes';
 import { Validation } from '../utils/validation';
 import { ClassValidation } from '../validation/ClassValidation';
+import { ParticipantUtils } from './../utils/participant';
 
 export class ClassService {
   static async getClass (request: GetClassByIdRequest): Promise<GetClassByIdResponse> {
@@ -21,6 +22,7 @@ export class ClassService {
 
     const totalTopics = rawClassData._count.topics;
     const totalSubtopics = rawClassData.topics.reduce((acc, topic) => acc + topic._count.subtopics, 0);
+    const totalParticipants = await ParticipantUtils.getParticipantCount(request.id);
 
     const classData = {
       id: rawClassData.id,
@@ -29,6 +31,7 @@ export class ClassService {
       imageUrl: rawClassData.imageUrl,
       totalTopics,
       totalSubtopics,
+      totalParticipants,
       createdAt: rawClassData.createdAt,
       updatedAt: rawClassData.updatedAt
     };
@@ -47,9 +50,10 @@ export class ClassService {
       throw new ResponseError(StatusCodes.NOT_FOUND, 'Class not found');
     }
 
-    const classes = rawClasses.map(rawClassData => {
+    const classes = await Promise.all(rawClasses.map(async rawClassData => {
       const totalTopics = rawClassData._count.topics;
       const totalSubtopics = rawClassData.topics.reduce((acc, topic) => acc + topic._count.subtopics, 0);
+      const totalParticipants = await ParticipantUtils.getParticipantCount(rawClassData.id);
 
       return {
         id: rawClassData.id,
@@ -58,10 +62,11 @@ export class ClassService {
         imageUrl: rawClassData.imageUrl,
         totalTopics,
         totalSubtopics,
+        totalParticipants,
         createdAt: rawClassData.createdAt,
         updatedAt: rawClassData.updatedAt
       };
-    });
+    }));
 
     return {
       classes
@@ -75,9 +80,10 @@ export class ClassService {
       throw new ResponseError(StatusCodes.NOT_FOUND, 'Class not found');
     }
 
-    const classes = rawClasses.map(rawClassData => {
+    const classes = await Promise.all(rawClasses.map(async rawClassData => {
       const totalTopics = rawClassData._count.topics;
       const totalSubtopics = rawClassData.topics.reduce((acc, topic) => acc + topic._count.subtopics, 0);
+      const totalParticipants = await ParticipantUtils.getParticipantCount(rawClassData.id);
 
       return {
         id: rawClassData.id,
@@ -86,10 +92,11 @@ export class ClassService {
         imageUrl: rawClassData.imageUrl,
         totalTopics,
         totalSubtopics,
+        totalParticipants,
         createdAt: rawClassData.createdAt,
         updatedAt: rawClassData.updatedAt
       };
-    });
+    }));
 
     return {
       classes
