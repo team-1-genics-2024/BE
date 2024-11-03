@@ -1,7 +1,7 @@
 import redisClient from "../config/redis";
 import { EnrollRepository } from "../repository/EnrollRepository";
 
-export class ParticipantUtils {
+export class ParticipantService {
   static async getParticipantCount(classId: number) {
     let participants: number = 0;
 

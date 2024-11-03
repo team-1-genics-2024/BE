@@ -10,7 +10,7 @@ import { ResponseError } from '../error/ResponseError';
 import { StatusCodes } from 'http-status-codes';
 import { Validation } from '../utils/validation';
 import { ClassValidation } from '../validation/ClassValidation';
-import { ParticipantUtils } from './../utils/participant';
+import { ParticipantService } from './ParticipantService';
 
 export class ClassService {
   static async getClass (request: GetClassByIdRequest): Promise<GetClassByIdResponse> {
@@ -22,7 +22,7 @@ export class ClassService {
 
     const totalTopics = rawClassData._count.topics;
     const totalSubtopics = rawClassData.topics.reduce((acc, topic) => acc + topic._count.subtopics, 0);
-    const totalParticipants = await ParticipantUtils.getParticipantCount(request.id);
+    const totalParticipants = await ParticipantService.getParticipantCount(request.id);
 
     const classData = {
       id: rawClassData.id,
@@ -53,7 +53,7 @@ export class ClassService {
     const classes = await Promise.all(rawClasses.map(async rawClassData => {
       const totalTopics = rawClassData._count.topics;
       const totalSubtopics = rawClassData.topics.reduce((acc, topic) => acc + topic._count.subtopics, 0);
-      const totalParticipants = await ParticipantUtils.getParticipantCount(rawClassData.id);
+      const totalParticipants = await ParticipantService.getParticipantCount(rawClassData.id);
 
       return {
         id: rawClassData.id,
@@ -83,7 +83,7 @@ export class ClassService {
     const classes = await Promise.all(rawClasses.map(async rawClassData => {
       const totalTopics = rawClassData._count.topics;
       const totalSubtopics = rawClassData.topics.reduce((acc, topic) => acc + topic._count.subtopics, 0);
-      const totalParticipants = await ParticipantUtils.getParticipantCount(rawClassData.id);
+      const totalParticipants = await ParticipantService.getParticipantCount(rawClassData.id);
 
       return {
         id: rawClassData.id,
