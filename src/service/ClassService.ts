@@ -32,6 +32,7 @@ export class ClassService {
       totalTopics,
       totalSubtopics,
       totalParticipants,
+      rating: rawClassData.rating,
       createdAt: rawClassData.createdAt,
       updatedAt: rawClassData.updatedAt
     };
@@ -63,6 +64,7 @@ export class ClassService {
         totalTopics,
         totalSubtopics,
         totalParticipants,
+        rating: rawClassData.rating,
         createdAt: rawClassData.createdAt,
         updatedAt: rawClassData.updatedAt
       };
@@ -93,6 +95,7 @@ export class ClassService {
         totalTopics,
         totalSubtopics,
         totalParticipants,
+        rating: rawClassData.rating,
         createdAt: rawClassData.createdAt,
         updatedAt: rawClassData.updatedAt
       };

@@ -26,6 +26,7 @@ model User {
   payments    Payment[]
   enrollments Enrollment[]
   results     Result[]
+  ratings     Rating[]
 
   @@index([email])
   @@map("users")
@@ -44,11 +45,11 @@ model Membership {
 }
 
 model Payment {
-  id     String      @id @default(uuid())
-  method String?   @db.VarChar(50)
+  id     String   @id @default(uuid())
+  method String?  @db.VarChar(50)
   amount Float    @db.DoublePrecision
   date   DateTime @default(now()) @db.Timestamp(6)
-  status String   @db.VarChar(50) @default("pending")
+  status String   @default("pending") @db.VarChar(50)
   userId Int
   user   User     @relation(fields: [userId], references: [id])
 
@@ -60,10 +61,12 @@ model Class {
   name        String       @db.VarChar(100)
   description String       @db.Text
   imageUrl    String       @db.Text
+  rating      Float        @default(0)
   createdAt   DateTime     @default(now()) @db.Timestamp(6)
   updatedAt   DateTime     @default(now()) @db.Timestamp(6)
   enrollments Enrollment[]
   topics      Topic[]
+  ratings     Rating[]
 
   @@index([name])
   @@map("classes")
@@ -151,4 +154,18 @@ model Result {
   topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   @@map("results")
+}
+
+model Rating {
+  id        String   @id @default(uuid())
+  rating    Int
+  userId    Int
+  classId   Int
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@index([userId, classId])
+  @@map("ratings")
 }

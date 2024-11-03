@@ -6,6 +6,7 @@ export interface Class {
   totalTopics: number;
   totalSubtopics: number;
   totalParticipants: number;
+  rating: number;
 }
 
 export interface GetClassByIdRequest {

@@ -83,4 +83,15 @@ export class ClassRepository {
       }
     });
   }
+
+  static async updateRating (classId: number, rating: number) {
+    return await db.class.update({
+      where: {
+        id: classId
+      },
+      data: {
+        rating
+      }
+    });
+  }
 }
