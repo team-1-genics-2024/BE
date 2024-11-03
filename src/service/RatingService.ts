@@ -5,6 +5,7 @@ import {
 import { RatingRepository } from './../repository/RatingRepository';
 import { ClassRepository } from './../repository/ClassRepository';
 import { UserRepository } from './../repository/UserRepository';
+import { EnrollRepository } from '../repository/EnrollRepository';
 import database from './../config/database';
 import { ResponseError } from './../error/ResponseError';
 import { StatusCodes } from 'http-status-codes';
@@ -26,6 +27,12 @@ export class RatingService {
 
     if (!classData) {
       throw new ResponseError(StatusCodes.NOT_FOUND, 'Class not found');
+    }
+
+    const enrollExists = await EnrollRepository.findByUserIdAndClassId(data.userId, data.classId);
+
+    if (!enrollExists) {
+      throw new ResponseError(StatusCodes.FORBIDDEN, 'User not enrolled in this class');
     }
 
     const ratingExists = await RatingRepository.findByUserIdAndClassId(data.userId, data.classId);
