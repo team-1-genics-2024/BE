@@ -26,21 +26,23 @@ export class SubTopicService {
             videoUrl: subTopic.videoUrl,
         }
     }
-    static async GetAllSubTopics(req: number): Promise<GetSubTopicResponse[]> {
-        const subTopics = await SubTopicRepository.findAll(req);
-        
-        const classExist = await SubTopicRepository.findTopic(req)
-
-        if (classExist == null) {
-            throw new ResponseError(404, "Class not exists");
+    static async GetSubTopicById(req: number): Promise<GetSubTopicResponse> {
+        const subTopic = await SubTopicRepository.findSubTopicById(req);
+        if (!subTopic) {
+            throw new ResponseError(404, "Subtopic not found");
         }
 
-        return subTopics.map(subTopic => ({
+        const classExist = await SubTopicRepository.findTopic(subTopic.topicId);
+        if (!classExist) {
+            throw new ResponseError(404, "Class not exists");
+        }
+    
+        return {
             name: subTopic.name,
             topicId: subTopic.topicId,
             description: subTopic.description,
             imageUrl: subTopic.imageUrl,
             videoUrl: subTopic.videoUrl,
-        }));
+        };
     }
 }

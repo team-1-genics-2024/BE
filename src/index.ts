@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 
 import { userRouter } from "./router/userRouter";
 import { authRouter } from "./router/authRouter";
-import { paymentRouter } from "./router/paymentRouter";
+// import { paymentRouter } from "./router/paymentRouter";
 import { membershipRouter } from "./router/membershipRouter";
 import { topicRouter } from "./router/TopicRouter";
 
@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(requestip.mw());
 
 app.use("/api/users", userRouter);
-app.use("/api/payment", paymentRouter);
+// app.use("/api/payment", paymentRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/membership", membershipRouter);
 app.use("/api/topic", topicRouter);

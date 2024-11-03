@@ -38,4 +38,11 @@ export class SubTopicRepository {
             }
         });
     }
+    static async findSubTopicById(subtopicId: number) {
+        return db.subtopic.findUnique({
+            where: {
+                id: subtopicId,
+            }
+        });
+    }
 }
