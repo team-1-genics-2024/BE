@@ -20,7 +20,7 @@ export class UserValidation {
     }).email("Invalid email format").min(1, "Email must contain at least 1 character").max(100, "Email cannot be longer than 100 characters"),
     password: z.string({
       required_error: "Password is required"
-    }).min(1, "Password must contain at least 1 character").max(100, "Password cannot be longer than 100 characters")
+    }).min(8, "Password must contain at least 8 character").max(100, "Password cannot be longer than 100 characters")
   });
 
   static readonly UPDATE : ZodType = z.object({
