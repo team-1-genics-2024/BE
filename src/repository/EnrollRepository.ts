@@ -18,7 +18,20 @@ export class EnrollRepository {
         userId
       },
       include: {
-        class: true
+        class: {
+          include: {
+            topics: {
+              include: {
+                subtopics: true
+              }
+            },
+            _count: {
+              select: {
+                userProgress: true
+              }
+            }
+          }
+        },
       }
     });
   }
