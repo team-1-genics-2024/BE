@@ -27,7 +27,7 @@ export class SubTopicService {
         }
     }
     static async GetSubTopicById(req: number): Promise<GetSubTopicResponse> {
-        const subTopic = await SubTopicRepository.findSubTopicById(req);
+        const subTopic = await SubTopicRepository.findById(req);
         if (!subTopic) {
             throw new ResponseError(404, "Subtopic not found");
         }
