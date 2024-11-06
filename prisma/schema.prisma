@@ -15,18 +15,19 @@ datasource db {
 }
 
 model User {
-  id          Int          @id @default(autoincrement())
-  email       String       @unique @db.VarChar(100)
-  password    String?      @db.VarChar(100)
-  name        String       @db.VarChar(100)
-  googleId    String?      @unique @db.VarChar(100)
-  createdAt   DateTime     @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime     @default(now()) @db.Timestamp(6)
-  membership  Membership?
-  payments    Payment[]
-  enrollments Enrollment[]
-  results     Result[]
-  ratings     Rating[]
+  id           Int            @id @default(autoincrement())
+  email        String         @unique @db.VarChar(100)
+  password     String?        @db.VarChar(100)
+  name         String         @db.VarChar(100)
+  googleId     String?        @unique @db.VarChar(100)
+  createdAt    DateTime       @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime       @default(now()) @db.Timestamp(6)
+  membership   Membership?
+  payments     Payment[]
+  enrollments  Enrollment[]
+  results      Result[]
+  ratings      Rating[]
+  userProgress UserProgress[]
 
   @@index([email])
   @@map("users")
@@ -57,16 +58,17 @@ model Payment {
 }
 
 model Class {
-  id          Int          @id @default(autoincrement())
-  name        String       @db.VarChar(100)
-  description String       @db.Text
-  imageUrl    String       @db.Text
-  rating      Float        @default(0)
-  createdAt   DateTime     @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime     @default(now()) @db.Timestamp(6)
-  enrollments Enrollment[]
-  topics      Topic[]
-  ratings     Rating[]
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(100)
+  description  String         @db.Text
+  imageUrl     String         @db.Text
+  rating       Float          @default(0)
+  createdAt    DateTime       @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime       @default(now()) @db.Timestamp(6)
+  enrollments  Enrollment[]
+  topics       Topic[]
+  ratings      Rating[]
+  userProgress UserProgress[]
 
   @@index([name])
   @@map("classes")
@@ -99,15 +101,16 @@ model Topic {
 }
 
 model Subtopic {
-  id          Int      @id @default(autoincrement())
-  name        String   @db.VarChar(100)
-  description String   @db.Text
-  imageUrl    String   @db.Text
-  videoUrl    String   @db.Text
-  topicId     Int
-  createdAt   DateTime @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime @default(now()) @db.Timestamp(6)
-  topic       Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(100)
+  description  String         @db.Text
+  imageUrl     String         @db.Text
+  videoUrl     String         @db.Text
+  topicId      Int
+  createdAt    DateTime       @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime       @default(now()) @db.Timestamp(6)
+  topic        Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  UserProgress UserProgress[]
 
   @@map("subtopics")
 }
@@ -168,4 +171,20 @@ model Rating {
 
   @@index([userId, classId])
   @@map("ratings")
+}
+
+model UserProgress {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  classId    Int
+  subtopicId Int
+  createdAt  DateTime @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime @default(now()) @db.Timestamp(6)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subtopic   Subtopic @relation(fields: [subtopicId], references: [id], onDelete: Cascade)
+  class      Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@index([userId, classId])
+  @@index([userId, subtopicId])
+  @@map("user_progress")
 }

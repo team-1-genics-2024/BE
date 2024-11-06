@@ -7,6 +7,7 @@ import {
 import { EnrollRepository } from "../repository/EnrollRepository";
 import { ClassRepository } from "../repository/ClassRepository";
 import { UserRepository } from "../repository/UserRepository";
+import { SubTopicRepository } from "../repository/SubTopicRepository";
 import { ResponseError } from "../error/ResponseError";
 import { StatusCodes } from "http-status-codes";
 import { Validation } from "../utils/validation";
@@ -58,9 +59,22 @@ export class EnrollService {
 
     if (!enrolls.length) {
       throw new ResponseError(StatusCodes.NOT_FOUND, "No class enrolled");
-    }
+    } 
 
-    const classes = enrolls.map(enroll => enroll.class);
+    const classes = enrolls.map(enroll => {
+      const totalSubtopics = enroll.class.topics.reduce((acc, topic) => acc + topic.subtopics.length, 0);
+      const totalUserProgress = enroll.class._count.userProgress;
+
+      return {
+        id: enroll.class.id,
+        name: enroll.class.name,
+        description: enroll.class.description,
+        imageUrl: enroll.class.imageUrl,
+        rating: enroll.class.rating,
+        totalUserProgress,
+        totalSubtopics,
+      };
+    });
 
     return {
       classes,
