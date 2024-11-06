@@ -35,6 +35,14 @@ export class UserProgressService {
       throw new ResponseError(StatusCodes.NOT_FOUND, "Subtopic not found");
     }
 
+    const topics = classData.topics;
+
+    const topicIds = topics.map(topic => topic.id);
+
+    if (!topicIds.includes(subtopic.topicId)) {
+      throw new ResponseError(StatusCodes.BAD_REQUEST, "Subtopic not found in class");
+    }
+
     const userProgressExists = await UserProgressRepository.findByUserIdAndSubtopicId(data.userId, data.subtopicId);
 
     if (userProgressExists.length) {
