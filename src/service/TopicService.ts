@@ -1,6 +1,8 @@
 import { CreateTopicRequest, GetTopicResponse } from "../model/TopicModel"
 import { ResponseError } from "../error/ResponseError";
 import { TopicRepository } from "../repository/TopicRepository";
+import { SubTopicRepository } from "../repository/SubTopicRepository";
+import { GetSubTopicResponse } from "../model/SubTopicModel";
 
 export class TopicService {
 
@@ -22,18 +24,28 @@ export class TopicService {
         }
     }
 
-    static async GetAllTopics(req: number): Promise<GetTopicResponse[]> {
-        const topics = await TopicRepository.findAll(req);
-        
-        const classExist = await TopicRepository.findClass(req)
-
+    static async GetAllTopics(classId: number): Promise<GetTopicResponse[]> {
+        const classExist = await TopicRepository.findClass(classId)
         if (classExist == null) {
             throw new ResponseError(404, "Class not exists");
         }
+        const topics = await TopicRepository.findAll(classId);
 
-        return topics.map(topic => ({
-            name: topic.name,
-            classId: topic.classId,
-        }));
+        return await Promise.all(
+            topics.map(async (topic) => {
+                const subtopics = await SubTopicRepository.findAll(topic.id);
+                return {
+                    name: topic.name,
+                    classId: topic.classId,
+                    SubTopic: subtopics.map((subtopic) => ({
+                        name: subtopic.name,
+                        topicId: subtopic.topicId,
+                        description: subtopic.description,
+                        imageUrl: subtopic.imageUrl,
+                        videoUrl: subtopic.videoUrl,
+                    })) as GetSubTopicResponse[],
+                };
+            })
+        );
     }
 }

@@ -22,10 +22,10 @@ export class SubTopicController {
         }
     };
 
-    static async getAllSubTopics(req: Request, res: Response) {
+    static async getSubTopicById(req: Request, res: Response) {
         try {
-            var { topicId } = req.params
-            const subtopics = await SubTopicService.GetAllSubTopics(Number(topicId))
+            var { subtopicId } = req.params
+            const subtopics = await SubTopicService.GetSubTopicById(Number(subtopicId))
             successResponse(res, StatusCodes.OK, "Topics retrieved successfully", subtopics);
         } catch (error) {
             if (error instanceof Error) {

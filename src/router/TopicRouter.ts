@@ -8,6 +8,6 @@ export const topicRouter = Router()
 topicRouter.use(AuthMiddleware)
 
 topicRouter.post("/",TopicController.create)
-topicRouter.get("/:classId/topic", TopicController.getAllTopics)
+topicRouter.get("/:classId/", TopicController.getAllTopics)
 topicRouter.post("/subtopic", SubTopicController.create)
-topicRouter.get("/:topicId/subtopic", SubTopicController.getAllSubTopics)
+topicRouter.get("/subtopic/:subtopicId", SubTopicController.getSubTopicById)
