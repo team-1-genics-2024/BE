@@ -36,6 +36,9 @@ app.use("/api/class", classRouter);
 app.use("/api/enroll", enrollRouter);
 app.use("/api/progress", userProgressRouter);
 
-app.listen(process.env.PORT_SERVER || 5000, () => {
-  console.log(`Server is running on port ${process.env.PORT_SERVER || 5000}`);
+const port = Number(process.env.PORT_SERVER) || 5000;
+
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on port ${port}`);
 });
+

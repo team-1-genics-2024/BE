@@ -137,15 +137,15 @@ export class AuthService {
     if (!session) {
       throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
     }
-
+    
     if (data.refreshToken !== session.refreshToken) {
       throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
     }
-
+    
     if (session.userAgent !== data.userAgent || session.ipAddress !== data.ipAddress) {
       throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
     }
-
+    
     const payload: TokenPayload = {
       userId: session.userId,
       userAgent: session.userAgent,
