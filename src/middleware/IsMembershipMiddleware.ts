@@ -9,7 +9,7 @@ export const IsMembershipMiddleware = async (req: Request, res: Response, next: 
   try {
     const request = req as AuthRequest;
     const userId = request.user.id;
-    console.log(request.user);
+
     const membership = await MembershipRepository.findByUserId(userId);
   
     if (!membership) {
