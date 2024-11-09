@@ -88,6 +88,10 @@ export class AuthController {
         userId: request.user.id
       };
       await AuthService.logoutUser(logoutReq);
+
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
+
       successResponse(res, StatusCodes.OK, "Logout Success");
     } catch (err) {
       if (err instanceof Error) {
