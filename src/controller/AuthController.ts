@@ -89,8 +89,8 @@ export class AuthController {
       };
       await AuthService.logoutUser(logoutReq);
 
-      res.clearCookie('accessToken');
-      res.clearCookie('refreshToken');
+      res.clearCookie('accessToken', { httpOnly: true, secure: true, sameSite: 'none' });
+      res.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'none' });
 
       successResponse(res, StatusCodes.OK, "Logout Success");
     } catch (err) {
