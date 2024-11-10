@@ -47,7 +47,7 @@ export class RateLimiter {
 
     static readonly refreshTokenLimiter = rateLimit({
         windowMs: 15 * 60 * 1000,
-        max: 10,
+        max: 100,
         handler: (req: Request, res: Response) => {
             errorResponse(res, new ResponseError(StatusCodes.TOO_MANY_REQUESTS, "Too many requests, please try again in 15 minutes"));
         }
