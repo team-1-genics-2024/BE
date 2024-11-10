@@ -2,10 +2,17 @@ import rateLimit from "express-rate-limit";
 import { ResponseError } from "../error/ResponseError";
 import { StatusCodes } from "http-status-codes";
 import { errorResponse } from "../utils/api-response";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from 'express';
 
 export class RateLimiter {
-    static readonly registerLimiter = rateLimit({
+    private static getLimiter(options: any) {
+        if (process.env.NODE_ENV === 'development') {
+            return (req: Request, res: Response, next: NextFunction) => next();
+        }
+        return rateLimit(options);
+    }
+
+    static readonly registerLimiter = RateLimiter.getLimiter({
         windowMs: 15 * 60 * 1000,
         max: 2,
         handler: (req: Request, res: Response) => {
@@ -13,15 +20,15 @@ export class RateLimiter {
         }
     });
 
-    static readonly loginLimiter = rateLimit({
+    static readonly loginLimiter = RateLimiter.getLimiter({
         windowMs: 15 * 60 * 1000,
         max: 5,
         handler: (req: Request, res: Response) => {
             errorResponse(res, new ResponseError(StatusCodes.TOO_MANY_REQUESTS, "Too many requests, please try again in 15 minutes"));
         }
     });
-    
-    static readonly logoutLimiter = rateLimit({
+
+    static readonly logoutLimiter = RateLimiter.getLimiter({
         windowMs: 15 * 60 * 1000,
         max: 10,
         handler: (req: Request, res: Response) => {
@@ -29,7 +36,7 @@ export class RateLimiter {
         }
     });
 
-    static readonly publicLimiter = rateLimit({
+    static readonly publicLimiter = RateLimiter.getLimiter({
         windowMs: 15 * 60 * 1000,
         max: 100,
         handler: (req: Request, res: Response) => {
@@ -37,7 +44,7 @@ export class RateLimiter {
         }
     });
 
-    static readonly getUserLimiter = rateLimit({
+    static readonly getUserLimiter = RateLimiter.getLimiter({
         windowMs: 15 * 60 * 1000,
         max: 200,
         handler: (req: Request, res: Response) => {
@@ -45,15 +52,15 @@ export class RateLimiter {
         }
     });
 
-    static readonly refreshTokenLimiter = rateLimit({
+    static readonly refreshTokenLimiter = RateLimiter.getLimiter({
         windowMs: 15 * 60 * 1000,
-        max: 100,
+        max: 1,
         handler: (req: Request, res: Response) => {
             errorResponse(res, new ResponseError(StatusCodes.TOO_MANY_REQUESTS, "Too many requests, please try again in 15 minutes"));
         }
     });
 
-    static readonly complexLimiter = rateLimit({
+    static readonly complexLimiter = RateLimiter.getLimiter({
         windowMs: 15 * 60 * 1000,
         max: 10,
         handler: (req: Request, res: Response) => {
@@ -61,7 +68,7 @@ export class RateLimiter {
         }
     });
 
-    static readonly paymentLimiter = rateLimit({
+    static readonly paymentLimiter = RateLimiter.getLimiter({
         windowMs: 15 * 60 * 1000,
         max: 5,
         handler: (req: Request, res: Response) => {
