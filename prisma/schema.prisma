@@ -69,7 +69,8 @@ model Class {
   topics       Topic[]
   ratings      Rating[]
   userProgress UserProgress[]
-
+  results     Result[]
+  Quiz        Quiz?
   @@index([name])
   @@map("classes")
 }
@@ -119,11 +120,12 @@ model Quiz {
   id         Int        @id @default(autoincrement())
   name       String     @db.VarChar(100)
   totalMarks Int
+  classId    Int @unique
   createdAt  DateTime   @default(now()) @db.Timestamp(6)
   updatedAt  DateTime   @default(now()) @db.Timestamp(6)
   questions  Question[]
   results    Result[]
-
+  class      Class      @relation(fields: [classId], references: [id], onDelete: Cascade)
   @@map("quizzes")
 }
 
@@ -150,12 +152,13 @@ model Result {
   quizId    Int
   userId    Int
   topicId   Int
+  classId   Int
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @default(now()) @db.Timestamp(6)
   quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
-
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
   @@map("results")
 }
 
