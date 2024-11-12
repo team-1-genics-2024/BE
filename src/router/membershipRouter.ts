@@ -2,10 +2,11 @@ import express from "express";
 
 import { MembershipController } from "../controller/membershipController";
 import { AuthMiddleware } from "../middleware/AuthMiddleware";
+import { RateLimiter } from "../middleware/RateLimiter";
 
 export const membershipRouter = express.Router();
 
-membershipRouter.post("/", AuthMiddleware, MembershipController.create);
-membershipRouter.get("/:id", MembershipController.getById);
-membershipRouter.put("/", AuthMiddleware, MembershipController.updateByUserId);
-membershipRouter.get("/", MembershipController.getAll);
+membershipRouter.post("/", RateLimiter.complexLimiter, AuthMiddleware, MembershipController.create);
+membershipRouter.get("/:id", RateLimiter.publicLimiter, MembershipController.getById);
+membershipRouter.put("/", RateLimiter.publicLimiter, AuthMiddleware, MembershipController.updateByUserId);
+membershipRouter.get("/", RateLimiter.publicLimiter, MembershipController.getAll);

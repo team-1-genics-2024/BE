@@ -3,6 +3,7 @@ import { ResponseError } from "../error/ResponseError";
 import { TopicRepository } from "../repository/TopicRepository";
 import { SubTopicRepository } from "../repository/SubTopicRepository";
 import { GetSubTopicResponse } from "../model/SubTopicModel";
+import { StatusCodes } from "http-status-codes";
 
 export class TopicService {
 
@@ -10,12 +11,12 @@ export class TopicService {
         const classExist = await TopicRepository.findClass(request.classId)
 
         if (classExist == null) {
-            throw new ResponseError(404, "Class not exists");
+            throw new ResponseError(StatusCodes.NOT_FOUND, "Class not exists");
         }
         const topicExist = await TopicRepository.findByName(request.name)
 
         if (topicExist) {
-            throw new ResponseError(409, "Topic already exists");
+            throw new ResponseError(StatusCodes.CONFLICT, "Topic already exists");
         }
         const topic = await TopicRepository.createTopic(request.name, request.classId)
         return {
@@ -27,7 +28,7 @@ export class TopicService {
     static async GetAllTopics(classId: number): Promise<GetTopicResponse[]> {
         const classExist = await TopicRepository.findClass(classId)
         if (classExist == null) {
-            throw new ResponseError(404, "Class not exists");
+            throw new ResponseError(StatusCodes.NOT_FOUND, "Class not exists");
         }
         const topics = await TopicRepository.findAll(classId);
 

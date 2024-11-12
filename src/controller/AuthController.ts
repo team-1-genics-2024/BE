@@ -88,6 +88,10 @@ export class AuthController {
         userId: request.user.id
       };
       await AuthService.logoutUser(logoutReq);
+
+      res.clearCookie('accessToken', { httpOnly: true, secure: true, sameSite: 'none' });
+      res.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'none' });
+
       successResponse(res, StatusCodes.OK, "Logout Success");
     } catch (err) {
       if (err instanceof Error) {

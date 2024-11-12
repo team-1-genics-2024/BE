@@ -36,6 +36,48 @@ export class EnrollRepository {
     });
   }
 
+  static async findByUserIdAndKeyword(userId: number, keyword: string) {
+    return await db.enrollment.findMany({
+      where: {
+        userId,
+        class: {
+          OR: [
+            {
+              name: {
+                contains: keyword,
+                mode: 'insensitive'
+              }
+            },
+            {
+              description: {
+                contains: keyword,
+                mode: 'insensitive'
+              }
+            }
+          ]
+        }
+      },
+      include: {
+        class: {
+          include: {
+            topics: {
+              include: {
+                subtopics: true
+              }
+            },
+            _count: {
+              select: {
+                userProgress: true
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  
+  
+
   static async findByUserIdAndClassId(userId: number, classId: number) {
     return await db.enrollment.findFirst({
       where: {
