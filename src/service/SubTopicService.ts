@@ -1,4 +1,4 @@
-import { CreateSubTopicRequest, GetSubTopicResponse } from "../model/SubTopicModel";
+import { CreateSubTopicRequest, CreateSubTopicResponse, GetSubTopicResponse } from "../model/SubTopicModel";
 import { ResponseError } from "../error/ResponseError";
 import { SubTopicRepository } from "../repository/SubTopicRepository";
 import { EnrollRepository } from "../repository/EnrollRepository";
@@ -7,7 +7,7 @@ import { StatusCodes } from "http-status-codes";
 import { StorageUtils } from "../utils/storage-utils";
 
 export class SubTopicService {
-    static async CreateSubTopic (request: CreateSubTopicRequest): Promise<GetSubTopicResponse> {
+    static async CreateSubTopic (request: CreateSubTopicRequest): Promise<CreateSubTopicResponse> {
         const topicExist = await SubTopicRepository.findTopic(request.topicId)
 
         if (topicExist == null) {
@@ -52,6 +52,7 @@ export class SubTopicService {
     
         return {
             name: subTopic.name,
+            subtopicId: subTopic.id,
             topicId: subTopic.topicId,
             description: subTopic.description,
             imageUrl: subTopic.imageUrl,
