@@ -11,7 +11,6 @@ export class StorageUtils {
 
     const bucketName = process.env.GOOGLE_CLOUD_BUCKET_NAME as string;
     const [url] = await storage.bucket(bucketName).file(filename).getSignedUrl(options);
-    console.log(url);
     return url;
   }
 }
