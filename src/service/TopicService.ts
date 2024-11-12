@@ -41,6 +41,7 @@ export class TopicService {
                     SubTopic: subtopics.map((subtopic) => ({
                         name: subtopic.name,
                         topicId: subtopic.topicId,
+                        subtopicId: subtopic.id,
                         description: subtopic.description,
                         imageUrl: subtopic.imageUrl,
                         videoUrl: subtopic.videoUrl,
