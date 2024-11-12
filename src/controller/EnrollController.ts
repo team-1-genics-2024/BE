@@ -40,4 +40,23 @@ export class EnrollController {
       }
     }
   }
+
+  static async searchEnrolledClass(req: Request, res: Response) {
+    try {
+      const request = req as AuthRequest;
+      const keyword = req.query.keyword as string;
+      const searchReq = {
+        userId: request.user.id,
+        keyword: keyword
+      }
+      const response = await EnrollService.searchEnrolledClass(searchReq);
+      successResponse(res, StatusCodes.OK, "Search enrolled class success", response);
+    } catch (err) {
+      if (err instanceof Error) {
+        errorResponse(res, err);
+      } else {
+        errorResponse(res, new ResponseError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error"));
+      }
+    }
+  }
 }
