@@ -8,3 +8,4 @@ export const enrollRouter = Router();
 
 enrollRouter.post("/:classId", RateLimiter.complexLimiter, AuthMiddleware, IsMembershipMiddleware, EnrollController.enroll);
 enrollRouter.get("/", RateLimiter.publicLimiter, AuthMiddleware, EnrollController.getEnrolledClass);
+enrollRouter.get("/search", RateLimiter.publicLimiter, AuthMiddleware, EnrollController.searchEnrolledClass);

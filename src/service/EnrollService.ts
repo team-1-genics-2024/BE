@@ -3,6 +3,8 @@ import {
   EnrollResponse,
   GetEnrolledClassRequest,
   GetEnrolledClassResponse,
+  SearchEnrolledClassRequest,
+  SearchEnrolledClassResponse
 } from "../model/EnrollModel";
 import { EnrollRepository } from "../repository/EnrollRepository";
 import { ClassRepository } from "../repository/ClassRepository";
@@ -80,4 +82,37 @@ export class EnrollService {
       classes,
     };
   }
+
+  static async searchEnrolledClass(request: SearchEnrolledClassRequest): Promise<SearchEnrolledClassResponse> {
+    const data = Validation.validation(EnrollValidation.SEARCH_ENROLLED_CLASS, request);
+
+    const user = await UserRepository.findById(data.userId);
+
+    if (!user) {
+      throw new ResponseError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    const enrolls = await EnrollRepository.findByUserIdAndKeyword(data.userId, data.keyword);
+
+    if (!enrolls.length) {
+      throw new ResponseError(StatusCodes.NOT_FOUND, "Enrolled class not found");
+    }
+
+    const classes = enrolls.map(enroll => {
+      return {
+        id: enroll.class.id,
+        name: enroll.class.name,
+        description: enroll.class.description,
+        imageUrl: enroll.class.imageUrl,
+        rating: enroll.class.rating,
+        totalUserProgress: enroll.class._count.userProgress,
+        totalSubtopics: enroll.class.topics.reduce((acc, topic) => acc + topic.subtopics.length, 0),
+      };
+    });
+
+    return {
+      classes,
+    };
+  }
 }
+
