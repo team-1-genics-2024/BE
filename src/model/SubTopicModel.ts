@@ -9,6 +9,7 @@ export interface CreateSubTopicRequest {
 export interface GetSubTopicResponse {
     name: string;
     topicId: number;
+    subtopicId: number;
     description: string;
     imageUrl: string;
     videoUrl: string;
