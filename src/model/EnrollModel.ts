@@ -25,3 +25,12 @@ export interface GetEnrolledClassRequest {
 export interface GetEnrolledClassResponse {
   classes: EnrolledClass[];
 }
+
+export interface SearchEnrolledClassRequest {
+  userId: number;
+  keyword: string;
+}
+
+export interface SearchEnrolledClassResponse {
+  classes: EnrolledClass[];
+}

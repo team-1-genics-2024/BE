@@ -15,4 +15,13 @@ export class EnrollValidation {
       required_error: "User ID is required"
     }).int(),
   });
+
+  static readonly SEARCH_ENROLLED_CLASS : ZodType = z.object({
+    userId: z.number({
+      required_error: "User ID is required"
+    }).int(),
+    keyword: z.string({
+      required_error: "Keyword is required"
+    }).nonempty()
+  });
 }
