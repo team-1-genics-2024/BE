@@ -4,6 +4,7 @@ import { SubTopicRepository } from "../repository/SubTopicRepository";
 import { EnrollRepository } from "../repository/EnrollRepository";
 import { AuthRequest } from "../model/AuthModel";
 import { StatusCodes } from "http-status-codes";
+import { StorageUtils } from "../utils/storage-utils";
 
 export class SubTopicService {
     static async CreateSubTopic (request: CreateSubTopicRequest): Promise<GetSubTopicResponse> {
@@ -36,23 +37,25 @@ export class SubTopicService {
         }
 
         const classExist = await SubTopicRepository.findTopic(subTopic.topicId);
-        console.log(classExist);
+
         if (!classExist) {
             throw new ResponseError(StatusCodes.NOT_FOUND, "Class not exists");
         }
-        console.log(auth.user.id, classExist.id);
+
         const isEnrolled = await EnrollRepository.findByUserIdAndClassId(auth.user.id, classExist.classId);
 
         if (!isEnrolled) {
             throw new ResponseError(StatusCodes.FORBIDDEN, "You not enrolled in this class");
         }
+
+        const url = await StorageUtils.getSignedUrl(subTopic.videoUrl);
     
         return {
             name: subTopic.name,
             topicId: subTopic.topicId,
             description: subTopic.description,
             imageUrl: subTopic.imageUrl,
-            videoUrl: subTopic.videoUrl,
+            videoUrl: url,
         };
     }
 }
