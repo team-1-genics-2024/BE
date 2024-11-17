@@ -28,6 +28,7 @@ model User {
   results      Result[]
   ratings      Rating[]
   userProgress UserProgress[]
+  Certificate  Certificate[]
 
   @@index([email])
   @@map("users")
@@ -69,8 +70,10 @@ model Class {
   topics       Topic[]
   ratings      Rating[]
   userProgress UserProgress[]
-  results     Result[]
-  Quiz        Quiz?
+  results      Result[]
+  Quiz         Quiz?
+  Certificate  Certificate[]
+
   @@index([name])
   @@map("classes")
 }
@@ -96,7 +99,6 @@ model Topic {
   updatedAt DateTime   @default(now()) @db.Timestamp(6)
   class     Class      @relation(fields: [classId], references: [id], onDelete: Cascade)
   subtopics Subtopic[]
-  results   Result[]
 
   @@map("topics")
 }
@@ -120,12 +122,14 @@ model Quiz {
   id         Int        @id @default(autoincrement())
   name       String     @db.VarChar(100)
   totalMarks Int
-  classId    Int @unique
+  classId    Int        @unique
   createdAt  DateTime   @default(now()) @db.Timestamp(6)
   updatedAt  DateTime   @default(now()) @db.Timestamp(6)
   questions  Question[]
   results    Result[]
   class      Class      @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@index([classId])
   @@map("quizzes")
 }
 
@@ -143,6 +147,7 @@ model Question {
   updatedAt  DateTime @default(now()) @db.Timestamp(6)
   quiz       Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
 
+  @@index([quizId])
   @@map("questions")
 }
 
@@ -151,14 +156,14 @@ model Result {
   score     Int
   quizId    Int
   userId    Int
-  topicId   Int
   classId   Int
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @default(now()) @db.Timestamp(6)
   quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
   class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@index([userId, classId])
   @@map("results")
 }
 
@@ -190,4 +195,17 @@ model UserProgress {
   @@index([userId, classId])
   @@index([userId, subtopicId])
   @@map("user_progress")
+}
+
+model Certificate {
+  id        String   @id
+  userId    Int
+  classId   Int
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, classId])
+  @@map("certificates")
 }

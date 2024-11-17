@@ -4,6 +4,7 @@ import { QuestionService } from "../service/QuestionService";
 import { Question } from "../model/QuestionModel";
 import { successResponse, errorResponse } from "../utils/api-response";
 import { ResponseError } from "../error/ResponseError";
+import { AuthRequest } from "../model/AuthModel";
 
 export class QuestionController {
     static async create(req: Request, res: Response) {
@@ -23,8 +24,13 @@ export class QuestionController {
 
     static async getAllQuestionByQuiz(req: Request, res: Response) {
         try {
-            const { quiz_id } = req.params
-            const questions = await QuestionService.getQuestionByQuiz(Number(quiz_id))
+            const request = req as AuthRequest
+            const data = {
+                userId: request.user.id,
+                quizId: Number(request.params.quizId),
+                classId: Number(request.params.classId)
+            }
+            const questions = await QuestionService.getQuestionByQuiz(data)
             successResponse(res, StatusCodes.OK, "Question retrieved successfully", questions);
         } catch (error) {
             if (error instanceof Error) {

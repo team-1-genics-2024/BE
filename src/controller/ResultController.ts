@@ -4,12 +4,17 @@ import { ResultService } from "../service/ResultService";
 import { Result } from "../model/ResultModel";
 import { successResponse, errorResponse } from "../utils/api-response";
 import { ResponseError } from "../error/ResponseError";
+import { AuthRequest } from "../model/AuthModel";
 
 export class ResultController {
     static async create(req: Request, res: Response) {
         try {
-            const ResultReq = req.body as Result
-            const ResultRes = await ResultService.createResult(ResultReq)
+            const request = req as AuthRequest
+            const data = {
+                ...req.body,
+                userId: request.user.id
+            } as Result
+            const ResultRes = await ResultService.createResult(data)
 
             successResponse(res, StatusCodes.CREATED, "Result created successfully", ResultRes)
         }catch (error){
@@ -84,6 +89,24 @@ export class ResultController {
             const { user_id } = req.params
             const results = await ResultService.getAllResultByUserId(Number(user_id))
             successResponse(res, StatusCodes.OK, "Result retrieved successfully", results);
+        } catch (error) {
+            if (error instanceof Error) {
+                errorResponse(res, error);
+            } else {
+                errorResponse(res, new ResponseError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error"));
+            }
+        }
+    }
+
+    static async getByUserIdAndClassId(req: Request, res: Response) {
+        try {
+            const request = req as AuthRequest
+            const data = {
+                userId: request.user.id,
+                classId: Number(req.params.classId)
+            }
+            const result = await ResultService.getByUserIdAndClassId(data)
+            successResponse(res, StatusCodes.OK, "Result retrieved successfully", result);
         } catch (error) {
             if (error instanceof Error) {
                 errorResponse(res, error);

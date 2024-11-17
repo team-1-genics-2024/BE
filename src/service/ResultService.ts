@@ -2,6 +2,7 @@ import {
     Result,
     GetAllResultsResponse,
     GetResultResponse,
+    GetResultByUserIdAndClassIdRequest,
 } from '../model/ResultModel';
 
 import { ResultRepository } from '../repository/ResultRepository'
@@ -10,6 +11,7 @@ import { StatusCodes } from 'http-status-codes';
 import { QuizRepository } from '../repository/QuizRepository';
 import { ClassRepository } from '../repository/ClassRepository';
 import { UserRepository } from '../repository/UserRepository';
+import { EnrollService } from './EnrollService';
 
 export class ResultService {
     static async createResult (request: Result){
@@ -30,12 +32,23 @@ export class ResultService {
         if (!quizData) {
           throw new ResponseError(StatusCodes.NOT_FOUND, 'Quiz not found');
         }
+
+        const enrolledClasses = await EnrollService.getEnrolledClass({userId: request.userId});
+
+        const isEnrolled = enrolledClasses.classes.find((enroll) => enroll.id === request.classId);
+
+        if (!isEnrolled) {
+            throw new ResponseError(StatusCodes.FORBIDDEN, "You not enrolled in this class");
+        }
+
+        if (isEnrolled.totalUserProgress !== isEnrolled.totalSubtopics) {
+            throw new ResponseError(StatusCodes.FORBIDDEN, "You not completed all subtopic in this class");
+        }
         
         const data = {
             userId: request.userId,
             score: request.score,
             quizId: request.quizId,
-            topicId: request.topicId,
             classId: request.classId,
         }
 
@@ -69,7 +82,6 @@ export class ResultService {
             userId: request.userId,
             score: request.score,
             quizId: request.quizId,
-            topicId: request.topicId,
             classId: request.classId,
         }
 
@@ -111,6 +123,17 @@ export class ResultService {
     }
     static async getResultById (request: number): Promise<GetResultResponse> {
         const resultData = await ResultRepository.getResultById(request);
+    
+        if (!resultData) {
+          throw new ResponseError(StatusCodes.NOT_FOUND, 'Result not found');
+        }
+    
+        return {
+          result: resultData
+        };
+    }
+    static async getByUserIdAndClassId (request: GetResultByUserIdAndClassIdRequest): Promise<GetResultResponse> {
+        const resultData = await ResultRepository.getByUserIdAndClassId(request.userId, request.classId);
     
         if (!resultData) {
           throw new ResponseError(StatusCodes.NOT_FOUND, 'Result not found');
