@@ -9,6 +9,7 @@ import { ResponseError } from '../error/ResponseError';
 import { StatusCodes } from 'http-status-codes';
 import { QuizRepository } from '../repository/QuizRepository';
 import { EnrollRepository } from './../repository/EnrollRepository';
+import { Quiz } from './../model/QuizModel';
  
 export class QuestionService {
     static async createQuestion(request: Question){
@@ -32,17 +33,29 @@ export class QuestionService {
     }
 
     static async getQuestionByQuiz (request: GetAllQuestionsRequest): Promise<GetAllQuestionsResponse> {
-        const questionData = await QuestionRepository.getAllQuestionByQuizId(request.quizId);
-    
-        if (questionData.length === 0) {
-          throw new ResponseError(StatusCodes.NOT_FOUND, 'Question not found');
-        }
+
+        const quiz = await QuizRepository.getQuizById(request.quizId);
+
+        if (!quiz) {
+            throw new ResponseError(StatusCodes.NOT_FOUND, 'Quiz not found');
+        };
+
+        if (quiz.classId !== request.classId) {
+            throw new ResponseError(StatusCodes.FORBIDDEN, 'Wrong class ID');
+        };
 
         const isEnrolled = await EnrollRepository.findByUserIdAndClassId(request.userId, request.classId);
 
         if (!isEnrolled) {
             throw new ResponseError(StatusCodes.FORBIDDEN, "You not enrolled in this class");
-        }
+        };
+
+        const questionData = await QuestionRepository.getAllQuestionByQuizId(request.quizId);
+    
+        if (questionData.length === 0) {
+          throw new ResponseError(StatusCodes.NOT_FOUND, 'Question not found');
+        };
+
         return {
           questions: questionData
         };
