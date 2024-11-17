@@ -14,7 +14,7 @@ import { UserProgressValidation } from "../validation/UserProgressValidation";
 export class UserProgressService {
   
   static async createUserProgress(request: CreateUserProgressRequest): Promise<CreateUserProgressResponse> {
-    console.log(request);
+    
     const data = Validation.validation(UserProgressValidation.CREATE, request);
 
     const user = await UserRepository.findById(data.userId);

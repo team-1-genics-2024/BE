@@ -47,6 +47,12 @@ export class CertificateService {
       throw new ResponseError(StatusCodes.FORBIDDEN, "At least 70% score required to get certificate");
     }
 
+    const certificateExists = await CertificateRepository.findByUserIdAndClassId(data.userId, data.classId);
+
+    if (certificateExists) {
+      throw new ResponseError(StatusCodes.CONFLICT, "You already have certificate for this class");
+    }
+
     const certifID = `SPO'O-USER-${data.userId}-CLASS-${data.classId}-CERT-${uuid()}`;
 
     const certificate = await CertificateRepository.create(certifID, data.userId, data.classId);
