@@ -10,6 +10,12 @@ export interface Question {
     quizId: number;
 }
 
+export interface GetAllQuestionsRequest {
+    userId: number;
+    quizId: number;
+    classId: number;
+}
+
 export interface GetAllQuestionsResponse {
     questions: Question[]
 }

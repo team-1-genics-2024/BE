@@ -1,12 +1,14 @@
 import {
     Quiz,
     GetQuizResponse,
-    GetAllQuizResponse
+    GetAllQuizResponse,
+    GetQuizRequest
 } from '../model/QuizModel';
 import { QuizRepository } from '../repository/QuizRepository';
 import { ResponseError } from '../error/ResponseError';
 import { StatusCodes } from 'http-status-codes';
 import { ClassRepository } from '../repository/ClassRepository';
+import { EnrollRepository } from '../repository/EnrollRepository';
  
 export class QuizService {
 
@@ -26,15 +28,21 @@ export class QuizService {
 
     }
 
-    static async getQuizByClass (request: number): Promise<GetAllQuizResponse> {
-        const quizData = await QuizRepository.getAllQuizByClassId(request);
+    static async getQuizByClass (request: GetQuizRequest): Promise<GetQuizResponse> {
+        const quizData = await QuizRepository.getQuizByClassId(request.classId);
     
         if (!quizData) {
           throw new ResponseError(StatusCodes.NOT_FOUND, 'Quiz not found');
         }
+
+        const isEnrolled = await EnrollRepository.findByUserIdAndClassId(request.userId, request.classId);
+
+        if (!isEnrolled) {
+            throw new ResponseError(StatusCodes.FORBIDDEN, "You not enrolled in this class");
+        }
     
         return {
-          quizzes: quizData
+          quiz: quizData
         };
       }
 

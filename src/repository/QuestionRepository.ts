@@ -6,6 +6,7 @@ export class QuestionRepository {
     static async createQuestion(
         data: any
     ){
+        console.log(data)
         return await db.question.create({
             data: {
                 question: data.question,

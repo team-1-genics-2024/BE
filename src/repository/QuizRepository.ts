@@ -14,8 +14,8 @@ export class QuizRepository {
             }
         })
     }
-    static async getAllQuizByClassId(classId: number) {
-        return await db.quiz.findMany({
+    static async getQuizByClassId(classId: number) {
+        return await db.quiz.findFirst({
             where: {
                 classId: classId,
             }

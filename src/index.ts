@@ -15,6 +15,7 @@ import { questionRouter } from "./router/QuestionRouter";
 import { quizRouter } from "./router/QuizRouter";
 import { resultRouter } from "./router/ResultRouter";
 import { userProgressRouter } from "./router/progressRouter";
+import { certificateRouter } from "./router/certificateRouter";
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use("/api/question", questionRouter);
 app.use("/api/quiz", quizRouter);
 app.use("/api/result", resultRouter);
 app.use("/api/userProgress", userProgressRouter);
+app.use("/api/certificate", certificateRouter);
 
 const port = Number(process.env.PORT_SERVER) || 5000;
 

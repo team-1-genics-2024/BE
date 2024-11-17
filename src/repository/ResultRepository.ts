@@ -12,7 +12,6 @@ export class ResultRepository {
               userId: data.userId,
               score: data.score,
               quizId: data.quizId,
-              topicId: data.topicId,
               classId: data.classId,
             }
           });
@@ -47,6 +46,18 @@ export class ResultRepository {
             where: {id: resultId},
             data: data
         })
+    }
+
+    static async getByUserIdAndClassId(userId: number, classId: number) {
+        return await db.result.findFirst({
+            where: {
+                userId: userId,
+                classId: classId
+            },
+            orderBy: {
+                score: 'desc'
+            }
+        });
     }
 
 }
