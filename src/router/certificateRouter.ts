@@ -8,3 +8,4 @@ export const certificateRouter = Router();
 
 certificateRouter.post("/", RateLimiter.complexLimiter, AuthMiddleware, IsMembershipMiddleware, CertificateController.create);
 certificateRouter.get("/class/:classId", RateLimiter.publicLimiter, AuthMiddleware, CertificateController.getCertificate);
+certificateRouter.get("/", RateLimiter.publicLimiter, AuthMiddleware, CertificateController.getAllCertificateByUser);
