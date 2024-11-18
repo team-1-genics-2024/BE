@@ -10,4 +10,5 @@ membershipRouter.post("/", RateLimiter.complexLimiter, AuthMiddleware, Membershi
 membershipRouter.get("/remaining", RateLimiter.publicLimiter, AuthMiddleware, MembershipController.getRemaining);
 membershipRouter.put("/", RateLimiter.publicLimiter, AuthMiddleware, MembershipController.updateByUserId);
 membershipRouter.get("/", RateLimiter.publicLimiter, MembershipController.getAll);
-membershipRouter.get("/:id", RateLimiter.publicLimiter, MembershipController.getById);
+// --- INI COMMENT AJAA
+// membershipRouter.get("/:id", RateLimiter.publicLimiter, MembershipController.getById);
