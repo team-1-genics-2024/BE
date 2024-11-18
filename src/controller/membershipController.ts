@@ -113,4 +113,27 @@ export class MembershipController {
       next(e);
     }
   }
+
+  static async getRemaining(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req as AuthRequest;
+      const userId = user.user.id;
+      const remaining = await MembershipService.getRemaining(userId);
+
+      successResponse(res, StatusCodes.OK, "Membership remaining", remaining);
+    } catch (e) {
+      if (e instanceof Error) {
+        errorResponse(res, e);
+      } else {
+        errorResponse(
+          res,
+          new ResponseError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            "Internal Server Error"
+          )
+        );
+      }
+      next(e);
+    }
+  }
 }

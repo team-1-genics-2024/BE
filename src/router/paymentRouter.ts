@@ -5,6 +5,6 @@ import { RateLimiter } from "../middleware/RateLimiter";
 
 export const paymentRouter = express.Router();
 
-paymentRouter.post("/", RateLimiter.paymentLimiter, AuthMiddleware, paymentController.payment);
-paymentRouter.post("/notification", RateLimiter.paymentLimiter, paymentController.notification);
+paymentRouter.post("/", AuthMiddleware, paymentController.payment);
+paymentRouter.post("/notification", paymentController.notification);
 paymentRouter.get("/", RateLimiter.publicLimiter, paymentController.getAll);

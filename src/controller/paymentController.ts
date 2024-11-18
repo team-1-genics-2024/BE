@@ -60,9 +60,17 @@ export const paymentController = {
       // console.log(transactionRes);
       const paymentRes = await PaymentService.paymentSuccess(transactionRes);
       // console.log(paymentRes);
-      // if (paymentRes.status == "settlement" || paymentRes.status == "capture") {
-      //   await MembershipService.updateByUserId(paymentRes.userId);
-      // }
+      // console.log(paymentRes);
+      if (
+        paymentRes.status == "settlement" ||
+        paymentRes.status == "capture" ||
+        paymentRes.status == "success"
+      ) {
+        const membership = await MembershipService.updateByUserId(
+          paymentRes.userId
+        );
+        // console.log(membership);
+      }
 
       // const user = req as AuthRequest;
       // const userId = user.user.id;
