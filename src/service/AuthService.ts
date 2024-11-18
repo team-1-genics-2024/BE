@@ -1,12 +1,12 @@
-import { 
-  LoginRequest, 
-  LoginResponse, 
-  AuthRequest, 
-  RefreshRequest, 
-  RefreshResponse, 
-  TokenPayload, 
+import {
+  LoginRequest,
+  LoginResponse,
+  AuthRequest,
+  RefreshRequest,
+  RefreshResponse,
+  TokenPayload,
   RefreshTokenPayload,
-  LogoutRequest 
+  LogoutRequest,
 } from "../model/AuthModel";
 import { UserRepository } from "../repository/UserRepository";
 import { SessionRepository } from "../repository/SessionRepository";
@@ -21,23 +21,32 @@ import { toSessionKey } from "../utils/sessionIdParse";
 import { StatusCodes } from "http-status-codes";
 
 export class AuthService {
-  static async loginUser (request: LoginRequest): Promise<LoginResponse> {
+  static async loginUser(request: LoginRequest): Promise<LoginResponse> {
     const data = Validation.validation(UserValidation.LOGIN, request.body);
 
     const user = await UserRepository.findByEmail(data.email);
 
     if (!user) {
-      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Invalid email or password");
+      throw new ResponseError(
+        StatusCodes.UNAUTHORIZED,
+        "Invalid email or password"
+      );
     }
 
-    if (!user.password){
-      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Invalid email or password");
+    if (!user.password) {
+      throw new ResponseError(
+        StatusCodes.UNAUTHORIZED,
+        "Invalid email or password"
+      );
     }
 
     const isPasswordMatch = await bcrypt.compare(data.password, user.password);
 
     if (!isPasswordMatch) {
-      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Invalid email or password");
+      throw new ResponseError(
+        StatusCodes.UNAUTHORIZED,
+        "Invalid email or password"
+      );
     }
 
     const payload: TokenPayload = {
@@ -54,11 +63,10 @@ export class AuthService {
       userId: user.id,
       userAgent: userAgent,
     };
-    
+
     const refreshToken = JwtToken.generateRefreshToken(refreshPayload);
     const refreshExpiry = JwtToken.extractTokenExpiration(refreshToken);
 
-    
     const session: Session = {
       userId: user.id,
       refreshToken: refreshToken,
@@ -67,9 +75,12 @@ export class AuthService {
       lastActive: new Date(Date.now()),
       isTimedOut: false,
       expiry: refreshExpiry,
-    }
-    
-    const validSessionReq = Validation.validation(SessionValidation.CREATE, session);
+    };
+
+    const validSessionReq = Validation.validation(
+      SessionValidation.CREATE,
+      session
+    );
     const sessionKey = toSessionKey(user.id);
     // --- SORI GES BENTAR AKU COMMENT DULU YA 'JUAN'
     await SessionRepository.create(sessionKey, validSessionReq);
@@ -77,10 +88,10 @@ export class AuthService {
     return {
       accessToken: token,
       refreshToken: refreshToken,
-    }
+    };
   }
 
-  static async loginWithGoogle (request: AuthRequest): Promise<LoginResponse> {
+  static async loginWithGoogle(request: AuthRequest): Promise<LoginResponse> {
     const user = request.user;
 
     if (!user) {
@@ -89,19 +100,19 @@ export class AuthService {
 
     const payload: TokenPayload = {
       userId: user.id,
-      userAgent: request.headers['user-agent'] as string,
+      userAgent: request.headers["user-agent"] as string,
     };
 
     const token = JwtToken.generateToken(payload);
 
-    const userAgent = request.headers['user-agent'] as string;
+    const userAgent = request.headers["user-agent"] as string;
     const ipAddress = request.ip as string;
 
     const refreshPayload: RefreshTokenPayload = {
       userId: user.id,
       userAgent: userAgent,
     };
-    
+
     const refreshToken = JwtToken.generateRefreshToken(refreshPayload);
     const refreshExpiry = JwtToken.extractTokenExpiration(refreshToken);
 
@@ -113,22 +124,32 @@ export class AuthService {
       lastActive: new Date(Date.now()),
       isTimedOut: false,
       expiry: refreshExpiry,
-    }
-    
-    const validSessionReq = Validation.validation(SessionValidation.CREATE, session);
+    };
+
+    const validSessionReq = Validation.validation(
+      SessionValidation.CREATE,
+      session
+    );
     const sessionKey = toSessionKey(user.id);
     await SessionRepository.create(sessionKey, validSessionReq);
 
     return {
       accessToken: token,
       refreshToken: refreshToken,
-    }
+    };
   }
 
-  static async refreshUserToken (request: RefreshRequest): Promise<RefreshResponse> {
-    const data = Validation.validation(SessionValidation.REFRESH_TOKEN, request);
+  static async refreshUserToken(
+    request: RefreshRequest
+  ): Promise<RefreshResponse> {
+    const data = Validation.validation(
+      SessionValidation.REFRESH_TOKEN,
+      request
+    );
 
-    const refreshPayload: TokenPayload = JwtToken.verifyRefreshToken(data.refreshToken);
+    const refreshPayload: TokenPayload = JwtToken.verifyRefreshToken(
+      data.refreshToken
+    );
 
     const sessionKey = toSessionKey(refreshPayload.userId);
 
@@ -137,15 +158,18 @@ export class AuthService {
     if (!session) {
       throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
     }
-    
+
     if (data.refreshToken !== session.refreshToken) {
       throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
     }
-    
-    if (session.userAgent !== data.userAgent || session.ipAddress !== data.ipAddress) {
+
+    if (
+      session.userAgent !== data.userAgent ||
+      session.ipAddress !== data.ipAddress
+    ) {
       throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
     }
-    
+
     const payload: TokenPayload = {
       userId: session.userId,
       userAgent: session.userAgent,
@@ -157,10 +181,10 @@ export class AuthService {
 
     return {
       accessToken: token,
-    }
+    };
   }
 
-  static async logoutUser (request: LogoutRequest) {
+  static async logoutUser(request: LogoutRequest) {
     const userId = request.userId as number;
     const sessionKey = toSessionKey(userId);
 

@@ -34,4 +34,22 @@ export class MembershipService {
   static async getAll() {
     return await MembershipRepository.getAll();
   }
+
+  static async getRemaining(id: number) {
+    const membership = await MembershipRepository.getById(id);
+    if (!membership) {
+      throw new Error("Membership not found");
+    }
+    
+    const currentDate = new Date();
+    const endDate = new Date(membership.endDate);
+    const differenceInTime = endDate.getTime() - currentDate.getTime();
+    const remainingDays = Math.ceil(differenceInTime / (1000 * 3600 * 24)); 
+
+    return {
+      userId: membership.userId,
+      remainingDays: remainingDays,
+      currentDate: currentDate,
+    };
+  }
 }
