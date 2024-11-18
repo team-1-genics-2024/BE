@@ -43,4 +43,22 @@ export class CertificateController {
       }
     }
   }
+
+  static async getAllCertificateByUser(req: Request, res: Response) {
+    try {
+      const request = req as AuthRequest;
+      const data = {
+        userId: request.user.id,
+      };
+      const certificates = await CertificateService.getCertificateByUserId(data);
+
+      successResponse(res, StatusCodes.OK, "Certificates fetched successfully", certificates);
+    } catch (error) {
+      if (error instanceof Error) {
+        errorResponse(res, error);
+      } else {
+        errorResponse(res, new ResponseError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error"));
+      }
+    }
+  }
 }

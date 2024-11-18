@@ -12,6 +12,7 @@ export class CertificateRepository {
       }
     });
   }
+
   static async findByUserIdAndClassId(userId: number, classId: number) {
     return await db.certificate.findUnique({
         where: {
@@ -19,6 +20,28 @@ export class CertificateRepository {
                 userId,
                 classId
             }
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            class: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
+    });
+  }
+
+  static async findByUserId(userId: number) {
+    return await db.certificate.findMany({
+        where: {
+            userId
         },
         include: {
             user: {

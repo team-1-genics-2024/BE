@@ -2,7 +2,9 @@ import {
   CreateCertificateRequest,
   CreateCertificateResponse,
   GetCertificateRequest,
-  GetCertificateResponse
+  GetCertificateResponse,
+  GetCertificateByUserRequest,
+  GetCertificateByUserResponse,
 } from "../model/CertificateModel";
 import { CertificateRepository } from "../repository/CertificateRepository";
 import { ResponseError } from "../error/ResponseError";
@@ -93,6 +95,22 @@ export class CertificateService {
 
     return {
       certificate: certificate,
+    };
+  }
+
+  static async getCertificateByUserId(request: GetCertificateByUserRequest): Promise<GetCertificateByUserResponse> {
+    const data = Validation.validation(CertificateValidation.GET_BY_USER, request);
+
+    const user = await UserRepository.findById(data.userId);
+
+    if (!user) {
+      throw new ResponseError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    const certificates = await CertificateRepository.findByUserId(data.userId);
+
+    return {
+      certificates: certificates || [],
     };
   }
 }
