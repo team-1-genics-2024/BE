@@ -46,7 +46,7 @@ export class CertificateService {
     }
 
     if (result.score < 70) {
-      throw new ResponseError(StatusCodes.FORBIDDEN, "At least 70% score required to get certificate");
+      throw new ResponseError(StatusCodes.FORBIDDEN, "At least 70% score required to get certificate, please try again");
     }
 
     const certificateExists = await CertificateRepository.findByUserIdAndClassId(data.userId, data.classId);
