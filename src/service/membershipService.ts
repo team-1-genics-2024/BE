@@ -36,7 +36,7 @@ export class MembershipService {
   }
 
   static async getRemaining(id: number) {
-    const membership = await MembershipRepository.getById(id);
+    const membership = await MembershipRepository.findByUserId(id);
     if (!membership) {
       throw new Error("Membership not found");
     }
