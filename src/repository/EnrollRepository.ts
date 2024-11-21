@@ -71,7 +71,11 @@ export class EnrollRepository {
             },
             _count: {
               select: {
-                userProgress: true
+                userProgress: {
+                  where: {
+                    userId
+                  }
+                }
               }
             }
           }
