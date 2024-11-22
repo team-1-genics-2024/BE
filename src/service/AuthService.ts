@@ -156,11 +156,11 @@ export class AuthService {
     const session = await SessionRepository.findByKey(sessionKey);
 
     if (!session) {
-      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
+      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Session Expired, Please Login Again!");
     }
 
     if (data.refreshToken !== session.refreshToken) {
-      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
+      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Session Expired, Please Login Again!");
     }
 
     if (
