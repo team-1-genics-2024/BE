@@ -1,6 +1,8 @@
 import {
   EnrollRequest,
   EnrollResponse,
+  CheckIsEnrolledRequest,
+  CheckIsEnrolledResponse,
   GetEnrolledClassRequest,
   GetEnrolledClassResponse,
   SearchEnrolledClassRequest,
@@ -45,6 +47,28 @@ export class EnrollService {
     return {
       userId: enroll.userId,
       classId: enroll.classId,
+    };
+  }
+
+  static async checkIsEnrolled(request: CheckIsEnrolledRequest): Promise<CheckIsEnrolledResponse> {
+    const user = await UserRepository.findById(request.userId);
+
+    if (!user) {
+      throw new ResponseError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    const classData = await ClassRepository.findById(request.classId);
+
+    if (!classData) {
+      throw new ResponseError(StatusCodes.NOT_FOUND, "Class not found");
+    }
+
+    const enroll = await EnrollRepository.findByUserIdAndClassId(request.userId, request.classId);
+
+    return {
+      userId: request.userId,
+      classId: request.classId,
+      isEnrolled: !!enroll,
     };
   }
 

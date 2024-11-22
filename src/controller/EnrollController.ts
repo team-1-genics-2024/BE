@@ -24,6 +24,24 @@ export class EnrollController {
     }
   }
 
+  static async checkIsEnrolled(req: Request, res: Response) {
+    try {
+      const request = req as AuthRequest;
+      const checkReq = {
+        userId: request.user.id,
+        classId: parseInt(req.params.classId)
+      }
+      const response = await EnrollService.checkIsEnrolled(checkReq);
+      successResponse(res, StatusCodes.OK, "Check is enrolled success", response);
+    } catch (err) {
+      if (err instanceof Error) {
+        errorResponse(res, err);
+      } else {
+        errorResponse(res, new ResponseError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error"));
+      }
+    }
+  }
+
   static async getEnrolledClass(req: Request, res: Response) {
     try {
       const request = req as AuthRequest;

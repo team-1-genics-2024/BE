@@ -18,6 +18,17 @@ export interface EnrollResponse {
   classId: number;
 }
 
+export interface CheckIsEnrolledRequest {
+  userId: number;
+  classId: number;
+}
+
+export interface CheckIsEnrolledResponse {
+  userId: number;
+  classId: number;
+  isEnrolled: boolean;
+}
+
 export interface GetEnrolledClassRequest {
   userId: number;
 }
