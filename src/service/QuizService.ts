@@ -38,7 +38,7 @@ export class QuizService {
         const isEnrolled = await EnrollRepository.findByUserIdAndClassId(request.userId, request.classId);
 
         if (!isEnrolled) {
-            throw new ResponseError(StatusCodes.FORBIDDEN, "You not enrolled in this class");
+            throw new ResponseError(StatusCodes.FORBIDDEN, "You are not enrolled in this class");
         }
     
         return {

@@ -45,7 +45,7 @@ export class SubTopicService {
         const isEnrolled = await EnrollRepository.findByUserIdAndClassId(auth.user.id, classExist.classId);
 
         if (!isEnrolled) {
-            throw new ResponseError(StatusCodes.FORBIDDEN, "You not enrolled in this class");
+            throw new ResponseError(StatusCodes.FORBIDDEN, "You are not enrolled in this class");
         }
 
         const url = await StorageUtils.getSignedUrl(subTopic.videoUrl);

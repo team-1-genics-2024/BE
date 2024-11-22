@@ -38,7 +38,7 @@ export class ResultService {
         const isEnrolled = enrolledClasses.classes.find((enroll) => enroll.id === request.classId);
 
         if (!isEnrolled) {
-            throw new ResponseError(StatusCodes.FORBIDDEN, "You not enrolled in this class");
+            throw new ResponseError(StatusCodes.FORBIDDEN, "You are not enrolled in this class");
         }
 
         if (isEnrolled.totalUserProgress !== isEnrolled.totalSubtopics) {

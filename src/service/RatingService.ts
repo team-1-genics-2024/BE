@@ -32,7 +32,7 @@ export class RatingService {
     const enrollExists = await EnrollRepository.findByUserIdAndClassId(data.userId, data.classId);
 
     if (!enrollExists) {
-      throw new ResponseError(StatusCodes.FORBIDDEN, 'User not enrolled in this class');
+      throw new ResponseError(StatusCodes.FORBIDDEN, 'You are not enrolled in this class');
     }
 
     const ratingExists = await RatingRepository.findByUserIdAndClassId(data.userId, data.classId);

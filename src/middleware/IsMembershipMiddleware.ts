@@ -20,7 +20,7 @@ export const IsMembershipMiddleware = async (req: Request, res: Response, next: 
     const curDate = Date.now();
   
     if (endDate < curDate) {
-      throw new ResponseError(StatusCodes.FORBIDDEN, "Your are not a member");
+      throw new ResponseError(StatusCodes.FORBIDDEN, "You are not a member");
     }
     
     next();

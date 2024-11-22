@@ -36,7 +36,7 @@ export class CertificateService {
     const isEnrolled = await EnrollRepository.findByUserIdAndClassId(data.userId, data.classId);
     
     if (!isEnrolled) {
-      throw new ResponseError(StatusCodes.FORBIDDEN, "You not enrolled in this class");
+      throw new ResponseError(StatusCodes.FORBIDDEN, "You are not enrolled in this class");
     }
 
     const result = await ResultRepository.getByUserIdAndClassId(data.userId, data.classId);
@@ -84,7 +84,7 @@ export class CertificateService {
     const isEnrolled = await EnrollRepository.findByUserIdAndClassId(data.userId, data.classId);
 
     if (!isEnrolled) {
-      throw new ResponseError(StatusCodes.FORBIDDEN, "You not enrolled in this class");
+      throw new ResponseError(StatusCodes.FORBIDDEN, "You are not enrolled in this class");
     }
 
     const certificate = await CertificateRepository.findByUserIdAndClassId(data.userId, data.classId);
