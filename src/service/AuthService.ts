@@ -167,7 +167,7 @@ export class AuthService {
       session.userAgent !== data.userAgent ||
       session.ipAddress !== data.ipAddress
     ) {
-      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Unauthorized!");
+      throw new ResponseError(StatusCodes.UNAUTHORIZED, "Session Expired, Please Login Again!");
     }
 
     const payload: TokenPayload = {
