@@ -12,17 +12,6 @@ export interface Certificate {
   }
 }
 
-export interface CreateCertificateRequest {
-  userId: number;
-  classId: number;
-}
-
-export interface CreateCertificateResponse {
-  id: string;
-  userId: number;
-  classId: number;
-}
-
 export interface GetCertificateRequest {
   userId: number;
   classId: number;

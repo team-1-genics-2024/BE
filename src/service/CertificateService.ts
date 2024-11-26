@@ -1,6 +1,4 @@
 import {
-  CreateCertificateRequest,
-  CreateCertificateResponse,
   GetCertificateRequest,
   GetCertificateResponse,
   GetCertificateByUserRequest,
@@ -18,54 +16,6 @@ import { ResultRepository } from "../repository/ResultRepository";
 import { v4 as uuid } from "uuid";
 
 export class CertificateService {
-  static async createCertificate(request: CreateCertificateRequest): Promise<CreateCertificateResponse> {
-    const data = Validation.validation(CertificateValidation.CREATE, request);
-
-    const user = await UserRepository.findById(data.userId);
-
-    if (!user) {
-      throw new ResponseError(StatusCodes.NOT_FOUND, "User not found");
-    }
-
-    const classData = await ClassRepository.findById(data.classId);
-
-    if (!classData) {
-      throw new ResponseError(StatusCodes.NOT_FOUND, "Class not found");
-    }
-
-    const isEnrolled = await EnrollRepository.findByUserIdAndClassId(data.userId, data.classId);
-    
-    if (!isEnrolled) {
-      throw new ResponseError(StatusCodes.FORBIDDEN, "You are not enrolled in this class");
-    }
-
-    const result = await ResultRepository.getByUserIdAndClassId(data.userId, data.classId);
-
-    if (!result) {
-      throw new ResponseError(StatusCodes.FORBIDDEN, "You must complete the quiz to get certificate");
-    }
-
-    if (result.score < 70) {
-      throw new ResponseError(StatusCodes.FORBIDDEN, "At least 70% score required to get certificate, please try again");
-    }
-
-    const certificateExists = await CertificateRepository.findByUserIdAndClassId(data.userId, data.classId);
-
-    if (certificateExists) {
-      throw new ResponseError(StatusCodes.CONFLICT, "You already have certificate for this class");
-    }
-
-    const certifID = `SPO'O-USER-${data.userId}-CLASS-${data.classId}-CERT-${uuid()}`;
-
-    const certificate = await CertificateRepository.create(certifID, data.userId, data.classId);
-
-    return {
-      id: certificate.id,
-      userId: certificate.userId,
-      classId: certificate.classId,
-    };
-  }
-
   static async getCertificate(request: GetCertificateRequest): Promise<GetCertificateResponse> {
     const data = Validation.validation(CertificateValidation.GET, request);
 
@@ -87,10 +37,28 @@ export class CertificateService {
       throw new ResponseError(StatusCodes.FORBIDDEN, "You are not enrolled in this class");
     }
 
-    const certificate = await CertificateRepository.findByUserIdAndClassId(data.userId, data.classId);
+    let certificate = await CertificateRepository.findByUserIdAndClassId(data.userId, data.classId);
 
     if (!certificate) {
-      throw new ResponseError(StatusCodes.NOT_FOUND, "Certificate not found");
+      const result = await ResultRepository.getByUserIdAndClassId(data.userId, data.classId);
+
+      if (!result) {
+        throw new ResponseError(StatusCodes.FORBIDDEN, "You must complete the quiz to get certificate");
+      }
+
+      if (result.score < 70) {
+        throw new ResponseError(StatusCodes.FORBIDDEN, "At least 70% score required to get certificate, please try again");
+      }
+
+      const certifID = `SPO'O-USER-${data.userId}-CLASS-${data.classId}-CERT-${uuid()}`;
+
+      const newCertificate = await CertificateRepository.create(certifID, data.userId, data.classId);
+
+      certificate = await CertificateRepository.findByUserIdAndClassId(newCertificate.userId, newCertificate.classId);
+
+      if (!certificate) {
+        throw new ResponseError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal server error");
+      }
     }
 
     return {
