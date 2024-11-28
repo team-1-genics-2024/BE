@@ -21,4 +21,5 @@ export interface GetSubTopicResponse {
     description: string;
     imageUrl: string;
     videoUrl: string;
+    classId: number;
 }

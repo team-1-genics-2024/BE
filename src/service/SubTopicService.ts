@@ -57,6 +57,7 @@ export class SubTopicService {
             description: subTopic.description,
             imageUrl: subTopic.imageUrl,
             videoUrl: url,
+            classId: subTopic.topic.classId,
         };
     }
 }

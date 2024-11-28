@@ -43,6 +43,13 @@ export class SubTopicRepository {
         return db.subtopic.findUnique({
             where: {
                 id: id,
+            },
+            include: {
+                topic: {
+                    select: {
+                        classId: true,
+                    }
+                }
             }
         });
     }
