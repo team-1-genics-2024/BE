@@ -31,4 +31,15 @@ export class RatingRepository {
     });
   }
 
+  static async updateById(id: string, rating: number) {
+    return await db.rating.update({
+      where: {
+        id
+      },
+      data: {
+        rating
+      }
+    });
+  }
+
 }

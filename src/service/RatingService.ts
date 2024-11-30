@@ -35,17 +35,19 @@ export class RatingService {
       throw new ResponseError(StatusCodes.FORBIDDEN, 'You are not enrolled in this class');
     }
 
-    const ratingExists = await RatingRepository.findByUserIdAndClassId(data.userId, data.classId);
-
-    if (ratingExists) {
-      throw new ResponseError(StatusCodes.CONFLICT, 'Already rated this class');
-    }
-
     const db = database;
 
     try {
       const result = await db.$transaction(async () => {
-        const newRating = await RatingRepository.create(data.userId, data.classId, data.rating);
+        const ratingExists = await RatingRepository.findByUserIdAndClassId(data.userId, data.classId);
+
+        let newRating;
+
+        if (ratingExists) {
+          newRating = await RatingRepository.updateById(ratingExists.id, data.rating);
+        } else {
+          newRating = await RatingRepository.create(data.userId, data.classId, data.rating);
+        }
 
         const ratings = await RatingRepository.findByClassId(data.classId);
 
