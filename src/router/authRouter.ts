@@ -9,7 +9,7 @@ export const authRouter = Router();
 authRouter.post("/login", RateLimiter.loginLimiter, AuthController.login);
 authRouter.get("/google", RateLimiter.loginLimiter, GoogleAuthMiddleware.concern);
 authRouter.get("/google/callback", GoogleAuthMiddleware.callback, AuthController.loginWithGoogle);
-authRouter.post("/refresh", RateLimiter.refreshTokenLimiter, AuthController.refreshToken);
+authRouter.post("/refresh", AuthController.refreshToken);
 authRouter.post("/logout", RateLimiter.logoutLimiter,AuthMiddleware, AuthController.logout);
 
 
